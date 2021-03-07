@@ -118,13 +118,14 @@ get.model.input <- function(){
     if (answer == 'n') {
         return(
             list(
-                s0 = eval(.read.num.expression('Enter s0 - initial spead of stream: ')),
-                v = eval(.read.num.expression('Enter v -spead of boat: ')),
-                l = eval(.read.num.expression('Enter l - distance to target: ')),
-                phi = eval(.read.num.expression(
-                    'Enter phi - angle of direction to target from initial boat position: ')),
-                f = .read.num.function(
-                        'Stream spead is s(y) = s0*f(y). Using R language define f(y) = ',
+                s0 = .read.num.expression('Enter s0 - initial spead of stream: '),
+                v = .read.num.expression('Enter v -spead of boat: '),
+                l = .read.num.expression('Enter l - distance to target: '),
+                phi = .read.num.expression(paste('Enter phi - angle of',
+                                                 'direction to target from',
+                                                 'initial boat position: ')),
+                f = .read.num.function(paste('Stream spead is s(y) = s0*f(y).',
+                                             'Using R language define f(y) = '),
                         arguments = c('y'))
             )
         )
