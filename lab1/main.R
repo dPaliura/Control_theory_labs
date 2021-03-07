@@ -56,6 +56,8 @@ source(paste0(path, 'output.R'), echo = FALSE)
 main <- function(){
     while (TRUE){
         model.input <- get.model.input()
+        if (is.null(model.input)) break()
+
         model <- build.model(model.input)
         display.model(model)
 
@@ -66,4 +68,3 @@ main <- function(){
 
 
 main()
-n
