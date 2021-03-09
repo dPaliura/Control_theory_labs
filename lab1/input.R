@@ -112,25 +112,27 @@
 get.model.input <- function(){
     read.line <- ..get.readline.method()
 
-    answer <- read.line("Use default input? y/n/x: ")
-    answer <- tolower(trimws(answer))
-    if (answer == 'y') return(.default.input)
-    if (answer == 'n') {
-        return(
-            list(
-                s0 = .read.num.expression('Enter s0 - initial spead of stream: '),
-                v = .read.num.expression('Enter v -spead of boat: '),
-                l = .read.num.expression('Enter l - distance to target: '),
-                phi = .read.num.expression(paste('Enter phi - angle of',
-                                                 'direction to target from',
-                                                 'initial boat position: ')),
-                f = .read.num.function(paste('Stream spead is s(y) = s0*f(y).',
-                                             'Using R language define f(y) = '),
-                        arguments = c('y'))
+    while (TRUE) {
+        answer <- read.line("Use default input? y/n/x: ")
+        answer <- tolower(trimws(answer))
+        if (answer == 'y') return(.default.input)
+        if (answer == 'n') {
+            return(
+                list(
+                    s0 = .read.num.expression('Enter s0 - initial spead of stream: '),
+                    v = .read.num.expression('Enter v - spead of boat: '),
+                    l = .read.num.expression('Enter l - distance to target: '),
+                    phi = .read.num.expression(paste('Enter phi - angle of',
+                                                     'direction to target from',
+                                                     'initial boat position: ')),
+                    f = .read.num.function(paste('Stream spead is s(y) = s0*f(y).',
+                                                 'Using R language define f(y) = '),
+                                           arguments = c('y'))
+                )
             )
-        )
+        }
+        if (answer == 'x') return(NULL)
     }
-    if (answer == 'x') return(NULL)
 }
 
 
