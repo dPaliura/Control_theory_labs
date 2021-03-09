@@ -3,7 +3,7 @@
 ## EN
 
 This repo created for holding laboratory works for subject "Control Theory",
-which where accomplished by *Daniel Paliura* - student of KM-73 group 
+which were accomplished by **Daniel Paliura** - student of KM-73 group 
 (2017-2021 study years) of NTUU "Igor Sikorsky KPI".
 
 Contents:
@@ -12,7 +12,7 @@ Laboratory work 1 'Navigation task of speed' - folder lab1
 ### Laboratory work 1
 
 Task of this work is in to find control of boat which moves on plane from point
-(0, 0) to some defined target with speed v. There is a vector field of stream on
+(0, 0) to some stable target with speed v. There is a vector field of stream on
 plane. Vector of stream is parallel to abscissa and perpendicular to ordinate in
 each plane point. Speed of stream is dependent of y coordinate and expressed as
 s(y) = s0 * f(y), 
@@ -28,7 +28,7 @@ Program developed with R language (R version 4.0.4) in RStudio Desktop
 environment under Ubuntu 20.4.
 
 To run program you need to run script main.R inside lab1 folder. Other scripts
-must be in same folder with main.R script.
+must be in the same folder with main.R script.
 
 The result of program run is description of input data, description of key model
 variables and plot with boat movement to target.
@@ -56,7 +56,7 @@ is asked to restart program.
 ## UA
 
 Цей репозиторій створено для збереження лабораторних робіт з предмету
-"Теорія Керування" , що виконав *Палюра Данило Валерійович* - студент групи 
+"Теорія Керування" , що виконав **Палюра Данило Валерійович** - студент групи 
 КМ-73 (2017-2021 навчальні роки) НТУУ "КПІ ім. Ігоря Сікорського". 
 
 Зміст:
