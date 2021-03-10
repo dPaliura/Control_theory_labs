@@ -1,3 +1,26 @@
+..define.legend.position <- function(xlim, ylim, pts){
+    x.mid <- mean(xlim)
+    y.mid <- mean(ylim)
+
+    positions <- c('topleft', 'topright', 'bottomright', 'bottomleft')
+
+    topleft.count <- sum((xlim[1] <= pts[,1] & pts[,1] <=   x.mid) &
+                         (y.mid   <= pts[,2] & pts[,2] <= ylim[2]))
+
+    toprght.count <- sum((x.mid   <= pts[,1] & pts[,1] <= xlim[2]) &
+                         (y.mid   <= pts[,2] & pts[,2] <= ylim[2]))
+
+    botrght.count <- sum((x.mid   <= pts[,1] & pts[,1] <= xlim[2]) &
+                         (ylim[1] <= pts[,2] & pts[,2] <=   y.mid))
+
+    botleft.count <- sum((xlim[1] <= pts[,1] & pts[,1] <=   x.mid) &
+                         (ylim[1] <= pts[,2] & pts[,2] <=   y.mid))
+
+    return(positions[which.min(c(topleft.count, toprght.count,
+                                 botrght.count, botleft.count))])
+}
+
+
 display.model <- function(model, run.X11=FALSE){
     nl <- '\n'
     inp <- model$input
@@ -32,13 +55,30 @@ display.model <- function(model, run.X11=FALSE){
     if (!is.na(model$boat.states[1])){
         cat('See \'plot\' window to view boat trace', nl)
         if (run.X11) X11()
-        plot(model$boat.states[,1],model$boat.states[,2], type='l',
-             xlim = range(model$boat.states[,1], model$target[1]),
-             ylim = range(model$boat.states[,2], model$target[2]))
-        points(x=model$target[1], y=model$target[2],
-               col='red', pch=20)
-    }
 
+        states <- model$boat.states
+        n <- nrow(states)
+
+        xlim <- range(model$boat.states[,1], model$target[1])
+        ylim <- range(model$boat.states[,2], model$target[2])
+        leg.pos <- ..define.legend.position(xlim, ylim,
+                                        rbind(states[,1:2], model$target))
+
+        plot(x = model$target[1], y = model$target[2],
+             col = 'red', pch = 4, lwd = 2,
+             xlim = xlim, ylim = ylim,
+             main = 'Boat trace to target',
+             xlab = 'x', ylab = 'y')
+        segments(x0 = states[1:(n-1),1], y0 = states[1:(n-1),2],
+                 x1 = states[2:n,1], y1 = states[2:n,2])
+        legend(leg.pos, legend = c('target', 'boat trace'),
+               pch = c(4, NA), lwd=c(2, 1), lty = c(0, 1),
+               col=c('red', 'black'))
+
+    }
+    else {
+        cat('Plot not available', nl)
+    }
 }
 
 
