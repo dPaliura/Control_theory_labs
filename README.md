@@ -1,5 +1,7 @@
 # control_theory_labs
 
+Languages: [EN](#EN) | [UA](#UA) | [RU](#RU)
+
 ## EN
 
 This repo created for holding laboratory works for subject "Control Theory",
