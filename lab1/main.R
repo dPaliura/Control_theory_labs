@@ -82,8 +82,8 @@ main <- function(){
                 model <- build.model(model.input)
                 display.model(model, run.X11=ifelse(run$method=='terminal',T,F))
             },
-            message = function(m){
-                print(m)
+            condition = function(con){
+                print(con)
             }
         )
         need.restart <- ask.for.restart()
