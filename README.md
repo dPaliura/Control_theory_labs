@@ -9,7 +9,7 @@ which were accomplished by **Daniel Paliura** - student of KM-73 group
 (2017-2021 study years) of NTUU "Igor Sikorsky KPI".
 
 Contents:
-Laboratory work 1 'Navigation task of speed' - folder lab1
+Laboratory work 1 'Navigation Problem of Speed' - folder lab1
 
 ### Laboratory work 1
 
