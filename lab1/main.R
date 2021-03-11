@@ -30,13 +30,8 @@ ez.csf <- function() {
             } else {
                 # RStudio Run Selection
                 # http://stackoverflow.com/a/35842176/2292993
-                tryCatch(
-                    {library(rstudioapi)},
-                    error = function(e) {
-                        install.packages('rstudioapi')
-                        library(rstudioapi)
-                        }
-                    )
+                require('rstudioapi')
+
                 pth = rstudioapi::getActiveDocumentContext()$path
                 if (pth!='') {
                     ret$path <- normalizePath(pth)
