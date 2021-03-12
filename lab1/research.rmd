@@ -1,0 +1,668 @@
+---
+title: "Navigation Problem of Speed research for parameters dependence"
+author: "Daniel Paliura"
+date: "3/11/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+This document created as additional to 'Control Theory' subject first laboratory
+work 'Navigation Problem of Speed'. In this document will be researched
+dependence of input parameters to problem solving. Also reasons of effect will
+be explained if it's be possible.
+
+## Formulation of the Navigation Problem of Speed
+
+It is boat on water surface which has to catch the immovable target placed on
+the same water surface. Water has stream moving with some speed. 
+Formalized problem: to find boat control that moves boat to reach target. Boat
+is defined as material point which moves with constant speed $v$ relative to
+water surface. Initially boat is in origin - point $(0,0)$ - of plane $xOy$,
+where target does not moves, which means that water surface moves relatively to
+plane. Stream vector is parallel to ordinate axis ($Ox$) in each point of plane
+and perpendicular to abscissa axis ($Oy$) if it isn't zero vector. Absolute
+value of stream vector depends on $y$ coordinate and is described by expression:
+$$s(y)=s_0 \times f(y),$$
+where  
+$s_0$ - stream speed multiplier or initial stream speed,  
+$f(y)$ - some defined function of stream speed dependence.
+Target is in point distanced on $l$ from origin and angle between $x$ axis and
+vector from origin to target is $\phi$, so target is in point
+$x^* = l \times cos(\phi), y^* = l \times sin(\phi)$
+
+## Solution method provided
+
+To solve this problem was spelled aiming method, which chooses best control
+vector in current point considering stream speed in point. In this method the
+speed of stream is considered as constant for small time interval 
+$\tau=\frac{l}{vN}$,
+where $N$ is some large number. I set $N=1e3$.  
+According to analytic calculations (Lagrange polynomial optimization)
+method uses next recurrent formulae:
+$$\lambda(t_k)=v\tau\sqrt{(x^*-x_k-s(y_k)\tau)^2 + 
+(y^*-y_k)^2} - (v\tau)^2,$$
+where  
+$t_k = k\tau$ - moment of time on $k$ iteration 
+$x_k, y_k$ - coordinates of boat position in moment $t_k$
+$k = 0\cdots K, N \le K \in \mathbb{N}$
+and $t_0 = 0, x_0 = 0, y_0 = 0$.
+
+$$u_x(t_k) = v\tau \frac{x^*-x_k - \tau s(y_k)}
+{\lambda(t_k)-(v\tau)^2},$$
+$$u_y(t_k) = v\tau \frac{y^*-y_k}
+{\lambda(t_k)-(v\tau)^2}$$
+$u_x, u_y$ should be recognized as boat control in moment $t_k$.
+Hence next position defined by formulae
+$$x_{k+1} = x_k + \tau(s(y_k) + u_x(t_k)v),$$
+$$y_{k+1} = y_k + u_y(t_k)v\tau$$
+To exclude infinite looping when target cannot be reached we shall set some 
+maximum number of iterations as $K > N$ so $k \le K$, and if $x_k=x^*, y_k=y^*$
+(target reached) then we have to define $K=k$.
+
+Full time of reaching the target is $T^*=\tau K$ if target reached, and if not
+then $T^*=+\infty$.
+
+## Parameters effect research
+
+```{r sourcing model}
+source('model.R', echo=FALSE)
+```
+
+#### Boat speed
+
+Analyzing the problem formulation and given method we can got conclusion:  
+Stream moves the boat only by $x$ axis and hence must condition to reach the
+target is $v>s(y^*)$, $s(y)$ is continuous on interval $y \in [0, y^*]$ and 
+$\forall y \in [0, y^*), |s(y)|< \infty$.
+This conclusion says that if stream speed is finite on the way then boat won't
+be blown into infinitely distant point from which it can't return to target. 
+It can be moved any far away but finitely. Also conditions $s(y)$ continuous
+and $v>s(y^*)$ are must to boat can reach such radius of $y^*$ where boat boat
+speed will exceed stream speed in each point on way to target, so boat will be
+approaching to target on it's way. 
+BUT it's must to say that **specified CONDITIONS are must but NOT SUFFICIENT**.
+It's so due to conditions doesn't provide that boat will converge those radius
+of $y^*$ where $v>s(y)$. If boat wouldn't aiming to target but would move only 
+by vertical first to reach such radius, then conditions would be sufficient.
+But for our case it can be the situation when 
+$\frac{du_y}{dt}=0$ while $t\to + \infty$, and hence 
+$y=\int_0^\infty u(t)dt < y^*$, where $y$ is boat coordinate. That's why named
+conditions is not sufficient.
+
+According to formulated sentences we can modify that method next way:
+boat must not decrease it's vertical speed less than some defined non-zero
+number independently on how it close to $y^*$ just until it reach $y^*$.
+
+Now let's build some models for this method to variate speed parameter to see
+how boat speed affects on ability to reach target. We shall set parameters such
+way that it will be known stream speed in line $y=y^*$ to be able check our 
+hypothesis. So we will fix parameters except $v$ as next:
+$s_0 = 1$
+$l = 1$
+$\phi = \pi/2$
+$f(y) = 2-y$
+So according to formulated conditions we have:
+target in point $x^*=0, y^*=1$ and hence speed of stream decreasing from 2 to 1
+while approaching. So $s(y^*) = 1$ and it is expected that boat will reach 
+target with speed greater than 1.
+
+We could take $f(y)=sin(\frac{y\pi}{2})$ but in such case it
+would be situation when stream speed wouldn't move boat from target because it's
+speed would be less than boat's on whole way. And boat would go to target
+directly.
+
+To see influence of boat speed we will build models for set of speeds:
+$V=\{0.8; 0.98; 1; 1.02; 1.2\}$ and see which ones will let boat to reach 
+target.  
+Traces shown on plot:
+
+```{r define.legend.position function definition}
+define.legend.position <- function(xlim, ylim, pts){
+    x.mid <- mean(xlim)
+    y.mid <- mean(ylim)
+
+    positions <- c('topleft', 'topright', 'bottomright', 'bottomleft')
+
+    topleft.count <- sum((xlim[1] <= pts[,1] & pts[,1] <=   x.mid) &
+                         (y.mid   <= pts[,2] & pts[,2] <= ylim[2]))
+
+    toprght.count <- sum((x.mid   <= pts[,1] & pts[,1] <= xlim[2]) &
+                         (y.mid   <= pts[,2] & pts[,2] <= ylim[2]))
+
+    botrght.count <- sum((x.mid   <= pts[,1] & pts[,1] <= xlim[2]) &
+                         (ylim[1] <= pts[,2] & pts[,2] <=   y.mid))
+
+    botleft.count <- sum((xlim[1] <= pts[,1] & pts[,1] <=   x.mid) &
+                         (ylim[1] <= pts[,2] & pts[,2] <=   y.mid))
+
+    return(positions[which.min(c(topleft.count, toprght.count,
+                                 botrght.count, botleft.count))])
+}
+```
+
+```{r boat speed variation building models}
+V <- c(0.8, 0.98, 1, 1.02, 1.2)
+s0 <- 1
+l <- 1
+phi <- pi/2
+f <- function(y) 2-y
+
+
+models.built <- lapply(V, 
+                 function(v) {build.model(list(v=v, s0=s0, l=l, phi=phi, f=f),
+                                          ..N*80)}
+                 )
+
+# This variable holds built models in case accidental rerun this piece of code
+# to be available interrupt running without result loss
+models <- models.built
+```
+
+```{r boat speed variation plotting models}
+xlim <- range(lapply(models, function(model) model$boat.states[,1]))
+ylim <- c(0,1)
+target <- models[[1]]$target
+
+plot(target[1], target[2], xlim=xlim, ylim = ylim,
+     pch = 4,
+     main = 'Boat trace dependance from it\'s speed',
+     xlab = 'x', ylab='y')
+
+pts <- NULL
+
+leg.col <- NULL
+leg.time <- NULL
+for (i in 1:5){
+    model <- models[[i]]
+    model.pts <- model$boat.states[,1:2]
+    
+    lines(model.pts[,1], model.pts[,2],
+          col = i+1, lwd=2)
+    leg.col <- c(leg.col, i+1)
+    leg.time <- c(leg.time, model$time)
+    
+    pts <- rbind(pts, model.pts)
+}
+
+leg.pos <- define.legend.position(xlim, ylim, pts)
+legend(leg.pos, legend = c('target',
+                           paste0('speed - ', V, '; time - ', leg.time)),
+       col = c(1, leg.col), pch=c(4, rep(NA, 5)),
+       lwd = c(NA, rep(2, 5)))
+```
+
+As we can see, there are 3 cases when boat can't reach target and all they are
+when $v \le s(y^*)=1$ as it was expected. In such case it is proofed to add
+constraint to stop algorithm when $y=y^*, x \ne x^*$ and $v \le s(y^*)$.
+
+```{r model improvement}
+..model.control <- function(boat, target, v, S.fun, tau){
+    s <- S.fun(boat)
+    x <- boat[1]
+    y <- boat[2]
+    x_t <- target[1]
+    y_t <- target[2]
+
+    if (s>=v & y==y_t & x!=x_t) return(NULL)
+
+    v.tau <- v*tau
+    v.tau.square <- v.tau^2
+    s.tau <- s*tau
+
+    lambda <- sqrt((x_t - x - s.tau)^2 + (y_t - y)^2)*v.tau - v.tau.square
+
+    control.divider <- lambda + v.tau.square
+    control <- c(x_t - x - s.tau, y_t-y)*v.tau/control.divider
+
+    boat.new <- boat + v*control*tau + tau*c(s,0)
+
+    return(list(
+        boat.new = boat.new,
+        control = control
+    ))
+}
+
+build.model <- function(input.obj, maxiters = ..N*100){
+    N <- ..N
+
+    s0  <- eval(input.obj$s0)
+    v   <- eval(input.obj$v)
+    l   <- eval(input.obj$l)
+    phi <- eval(input.obj$phi)
+    f   <- input.obj$f
+
+    boat <- c(x=0, y=0)
+    target <- l*c(x=cos(phi), y=sin(phi))
+
+    tau <- l/(v*N)
+
+    S <- function(boat) s0 * f(boat[2])
+
+    t=0
+    boat.states <- c(boat, t=t)
+    control  <- NULL
+
+    result = list(
+        input = input.obj,
+        target = target,
+        boat.states = NULL,
+        target.achieved = FALSE,
+        control = NULL,
+        time = 0,
+        iters = 0,
+        message = NULL,
+        N = ..N,
+        tau = tau
+    )
+
+    for (iter in 1:maxiters){
+        distance <- .euclidean.length(boat - target)
+
+        boat.new.state <- ..model.control(boat, target, v, S, tau)
+        if (is.null(boat.new.state)){
+            result$boat.states <- boat.states
+            result$target.achieved <- FALSE
+            result$control <- control
+            result$time <- Inf
+            result$iters <- iter
+            result$message <- paste('Target can\'t be reached. s(y_t) > v.')
+            return(result)
+        }
+        
+        boat.new <- boat.new.state$boat.new
+        control <- rbind(control, boat.new.state$control)
+        t <- t+tau
+
+        distance.gone <- .euclidean.length(boat.new-boat)
+        if (!is.finite(distance.gone)){
+            result$boat.states <- NA
+            result$target.achieved <- FALSE
+            result$control <- control
+            result$time <- NA
+            result$iters <- iter
+            result$message <- 'Non-finite values appeared while computing.'
+            return(result)
+        }
+        if (distance.gone >= distance){
+            boat.states <- rbind(boat.states, c(target, t=t))
+
+            result$boat.states <- boat.states
+            result$target.achieved <- TRUE
+            result$control <- control
+            result$time <- t
+            result$iters <- iter
+            return(result)
+        }
+
+        boat.states <- rbind(boat.states, c(boat.new, t=t))
+        boat <- boat.new
+    }
+
+    result$boat.states <- boat.states
+    result$control <- control
+    result$time <- Inf
+    result$iters <- iter
+    result$message <- paste0('Max number of iterations (', maxiters,') ',
+                              'achieved. ', 'Boat didn\'t reach the target.')
+    return(result)
+}
+
+```
+
+#### Stream initial speed
+
+It might be not hard to make conclusion that initial speed of stream affects on
+time spent to reach target and probably nonlinear. Also it will affect on boat
+trace.
+
+We will try to variate $s_0$ with next fixed values of other parameters:
+$v = 5$
+$l = 4$
+$\phi = \pi/2$
+$f(y) = sin(\frac{y\pi}{6} + \frac{\pi}{6})$
+Chosen expression for $f(y)$ provides values of it between 0.5 and 1 with values
+0.5 when $y \in \{0; y^*\}$. According to previous research we can variate
+initial stream speed as next: $s_0 \in \{0; 1; 3; 5; 7; 9; 11\}$.  
+Traces shown on plot:
+
+```{r initial stream speed variation building models}
+v <- 5
+S0 <- c(0, 1, 3, 5, 7, 9, 11)
+l <- 4
+phi <- pi/2
+f <- function(y) sin(y*pi/6 + pi/6)
+
+
+models.built <- lapply(S0,
+                function(s0) {build.model(list(v=v, s0=s0, l=l, phi=phi, f=f))})
+
+# This variable holds built models in case accidental rerun this piece of code
+# to be available interrupt running without result loss
+models <- models.built
+```
+
+```{r initial stream speed variation plotting models}
+xlim <- range(lapply(models, function(model) model$boat.states[,1]))
+ylim <- c(0,4)
+target <- models[[1]]$target
+
+plot(target[1], target[2], xlim=xlim, ylim = ylim,
+     pch = 4,
+     main = 'Boat trace dependance from initial stream speed',
+     xlab = 'x', ylab='y')
+
+pts <- NULL
+
+leg.col <- NULL
+leg.time <- NULL
+for (i in 1:7){
+    model <- models[[i]]
+    model.pts <- model$boat.states[,1:2]
+    
+    lines(model.pts[,1], model.pts[,2],
+          col = i+1, lwd=2)
+    leg.col <- c(leg.col, i+1)
+    leg.time <- c(leg.time, round(model$time, 5))
+    
+    pts <- rbind(pts, model.pts)
+}
+
+leg.pos <- define.legend.position(xlim, ylim, pts)
+legend(leg.pos, legend = c('target',
+                           paste0('s0 - ', S0, '; time - ', leg.time)),
+       col = c(1, leg.col), pch=c(4, rep(NA, 7)),
+       lwd = c(NA, rep(2, 7)))
+```
+
+This plot may seem not very interesting, but there is one interesting moment 
+which could be noticed earlier. But first about dependence. As we can see time
+of boat reaching target depends nonlinear on stream speed. When initial stream
+speed approaches to such that whole stream spead near to speed of boat the time
+increases much faster (the difference between time for $s_0=7$ and $s_0=9$ is
+much more than between $s_0=3$ and $s_0=5$). This parameter variation and 
+previous one says that boat speed must be much greater than stream speed to 
+reach target fast. And also in such cases stream speed affect much less on time
+if aiming method used.
+But more interesting are curves. We can see, that it's forms (especially when
+$s_0=9$) has bend near line $y=y^*$. It's interesting because we may make 
+conclusion that boat slides vertically and moves faster to target by $y$ 
+coordinate at first time, but then it slows vertical move loosing speed for 
+fighting stream speed. But we should be carefull making such conclusions.
+Let's see on plot of $f(y)$ speed dependence:
+
+```{r function f sin plot}
+Y <- 0:400/100
+X <- sapply(Y, f)
+plot(X, Y, 
+     type='l', xlim=c(0,2),
+     main = 'f(y) dependence from y coordinate',
+     xlab = 'f(y)', ylab = 'y')
+```
+
+As we can see, it would be better to overcome middle part of way
+(about between 1 and 3) straight vertically to pass rapid stream as 
+fastest possible and hence to has least loss of distance on fighting stream.
+
+#### Distance to target
+
+This parameter may influence on time and nonlinear but about it. To try find 
+something interesting we will take next fixed parameters:
+$v = 10$
+$s_0 = 2$
+$\phi = \pi/4$
+$f(y) = log(y+1)$
+And variate $l \in L=\{5; 10; 20; 50; 100; 200\}$. As we took $\phi = \pi/4$
+we expect that stream will help the boat to reach target faster on low 
+distances.  
+Traces shown on plot:
+
+```{r distance variation building models}
+v <- 10
+s0 <- 2
+L <- c(5, 10, 20, 50, 100, 200)
+phi <- pi/4
+f <- function(y) log(y+1)
+
+
+models.built <- lapply(L,
+                function(l) {build.model(list(v=v, s0=s0, l=l, phi=phi, f=f))})
+
+# This variable holds built models in case accidental rerun this piece of code
+# to be available interrupt running without result loss
+models <- models.built
+```
+
+```{r distance variation plotting models}
+xlim <- range(lapply(models, function(model) model$boat.states[,1]))
+ylim <- xlim
+
+
+plot(NA, xlim=xlim, ylim = ylim,
+     pch = 4,
+     main = 'Boat trace dependance from distance to target',
+     xlab = 'x', ylab='y')
+
+pts <- NULL
+
+leg.col <- NULL
+leg.time <- NULL
+for (i in 6:1){
+    model <- models[[i]]
+    model.pts <- model$boat.states[,1:2]
+    target <- models[[i]]$target
+    
+    points(target[1], target[2],
+           pch=4, col=i+1)
+    lines(model.pts[,1], model.pts[,2],
+          col = i+1, lwd=2)
+    leg.col <- c(leg.col, i+1)
+    leg.time <- c(leg.time, round(model$time, 5))
+    
+    pts <- rbind(pts, model.pts)
+}
+
+leg.pos <- define.legend.position(xlim, ylim, pts)
+legend(leg.pos, legend = c('target',
+                           paste0('l - ', L, '; time - ', rev(leg.time))),
+       col = c(1, rev(leg.col)), pch=c(4, rep(NA, 6)),
+       lwd = c(NA, rep(2, 6)))
+```
+
+Without stream the time would be $T = \{0.5; 1; 2; 5; 10; 20\}$, but
+with stream we have times less than without stream for $l \le 50$ and for
+$l=10, l=20$ there is the best profit of stream, which notably from traces
+(green and dark blue). Boat doesn't do a hook due to stream. In first case (red
+line) there is almost no profit of stream because it's speed very small on whole
+way. When $l=50$ boat already made a hook but still won more time on moving by
+stream than lost on  hook. And for more distant points $l=100, l=200$, boat
+already lost more time on hook than it got by moving along stream. Also for 
+$l=200$ stream speed approaches very close to boat speed:
+$s(y^*)=2*log(\frac{200}{\sqrt{2}}+1) \approx 9.91758$, So boat lost a lot of
+time in this case due to reasons clarified before.
+
+#### Angle between stream vector and vector from origin to target
+
+Parameter $\phi$ may affect directly on time and trace but as seen in previous
+great influence has function $f(y)$ because it defines how much stream affects
+on boat. We will take each $\pi/6$ angle as $\phi$ in interval $[0, \pi]$. 
+Other parameters will be next:
+$v = 1$
+$s_0 = 0.5$
+$l = 5$
+$f(y) = 1$  
+Traces shown on plot:  
+
+```{r phi angle variation building models}
+v <- 1
+s0 <- 0.5
+l <- 5
+Phi <- 0:6*pi/6
+f <- function(y) 1
+
+
+models.built <- lapply(Phi,
+                function(phi) {build.model(list(v=v, s0=s0, l=l, phi=phi, f=f))})
+
+# This variable holds built models in case accidental rerun this piece of code
+# to be available interrupt running without result loss
+models <- models.built
+```
+
+```{r phi angle variation plotting models}
+xlim <- c(-5, 5)
+ylim <- c(-4, 5)
+
+phi.str <- c('0', 'pi/6', 'pi/3', 'pi/2', '2pi/3', '5pi/6', 'pi')
+
+plot(NA, xlim=xlim, ylim = ylim,
+     main = 'Boat trace dependance from phi angle',
+     xlab = 'x', ylab='y')
+
+pts <- NULL
+
+leg.col <- NULL
+leg.time <- NULL
+for (i in 1:7){
+    model <- models[[i]]
+    model.pts <- model$boat.states[,1:2]
+    target <- model$target
+    
+    points(target[1], target[2],
+           col = i+1, pch=4)
+    lines(model.pts[,1], model.pts[,2],
+          col = i+1, lwd=2)
+    leg.col <- c(leg.col, i+1)
+    leg.time <- c(leg.time, round(model$time, 5))
+    
+    pts <- rbind(pts, model.pts)
+}
+
+leg.pos <- define.legend.position(xlim, ylim, pts)
+legend(leg.pos, legend = c('target',
+                           paste0('phi - ', phi.str, '; time - ', leg.time)),
+       col = c(1, leg.col), pch=c(4, rep(NA, 7)),
+       lwd = c(NA, rep(2, 7)),
+       ncol=2)
+```
+
+It was expected that time depends on angle, it's because angle defines how much
+boat will move against stream. It is interesting which dependence between angle
+and time. To view it we will make more models for angles on $[0, 2\pi]$. It's
+OK that target will be lower than $x$ axis in some cases, method allows it.
+Other parameters will left the same.
+
+```{r phi angle detailed variation building models}
+Phi <- 0:60*pi/30
+
+models.built <- lapply(Phi,
+                function(phi) build.model(list(v=v, s0=s0, l=l, phi=phi, f=f)))
+
+# This variable holds built models in case accidental rerun this piece of code
+# to be available interrupt running without result loss
+models <- models.built
+```
+
+``` {r plot for time dependance on phi angle}
+time <- sapply(models, function(model) model$time)
+plot(Phi, time,
+     col = 'red', pch = 20,
+     main = 'Time dependence on phi', xlab ='phi', ylab = 'Time')
+lines(Phi, sin(Phi-pi/2)*10/3 + 20/3, col='blue')
+legend(x='bottom', legend=c('dependence', 'sin(phi - pi/2)*10/3 + 20/3'), 
+       col = c('red', 'blue'), pch = c(20, NA), lty=c(NA, 1))
+```
+
+Dependence was such interesting and simple that I tried and built some sinus line
+which similar to got dependence. According to this plot we can conclude that 
+angle almost doesn't affect on time when angle near to 0 or $\pi k$, but almost 
+linear affect when angle around of $\pi k/4$ for $k \in \mathbb{Z}$. 
+But as we viewed dependence when stream speed is constant the conclusion is not
+general.
+
+#### Stream speed function
+
+This parameter was varied through researching other parameters and we found
+out that it can even make target unreachable. But in fact we can prove next
+sentence:
+if $\exists \hat{y} \in [0, y^*]: |s(\hat{y})|<v$ and 
+$\forall y \in [0, y^*]: |s(y)| < \infty$, where $s:\mathbb{R} \to \mathbb{R}$
+is continuous, then boat can be reached. But it might be impossible with aiming
+method. Should be used other algorithm, which could be also optimal. 
+
+While researching this problem I got an idea about algorithm which could be 
+used to provide reach and optimal control if  mentioned conditions are 
+true. I will try to prove this in next part.
+
+## Reach condition proof
+
+Conditions says that:
+1) $\exists \hat{y} \in [0, y^*]: |s(\hat{y})|<v$  
+2) $s:\mathbb{R} \to \mathbb{R}$ is continuous  
+3) $\forall y \in [0, y^*]: |s(y)| < \infty$
+
+Every time I says "boat moves along $y$ axis" I means it's control along $y$
+axis, so boat uses all speed to change only $y$ coordinate and $x$ coordinate is
+changed only by stream.
+
+According to conditions 2) and 3) the function $s(y)$ is Riemann intergable
+on interval $[0, y^*]$ according to the theorem (about continuous function
+integrability). Hence according to Riemann
+integral properties 
+$$\exists I_1 \equiv \int_{0}^{\hat{y}}s(y)dy$$
+$$\exists I_2 \equiv \int_{\hat{y}}^{y^*}s(y)dy$$
+and hence $$I = I_1 + I_2 = \int_{0}^{y^*}s(y)dy$$
+
+This integral equals to whole boat shift through it's way, but it's depends on
+$y$ not on time $t$. If boat moves directly vertically from origin to level
+$\hat{y}$ and after from level $\hat{y}$ to level $y^*$ then whole shift by $x$
+axis will be $I$. Wherein time intervals for this move will be
+$$\Delta t = \frac{\Delta y}{v} \Leftarrow
+(v = \frac{\Delta y}{\Delta t} = \frac{y_2 - y_1}{t_2 - t_1}=const)$$
+so whole time only for pure vertical move will be:
+$$T_{vrt} = \frac{\hat{y}-0}{v} + \frac{y^*-\hat{y}}{v} = \frac{y^*}{v}$$.
+And while moving vertically we have $y(t) = vt$, so $dy = vdt$.
+So now we can say that:
+$$I = v \int_{0}^{\frac{y^*}{v}}s(vt)dt$$
+But there is some issue: boat won't move it's whole way by $y$ coordinate. The
+idea is to move boat to such $y$ coordinate where absolute stream speed will be
+less than boat's speed so that boat could move by $x$ axis in any way. Got
+formula for $I$ will just help us to know how much and whereto move boat by $x$
+axis to piece out shift of stream got while vertical move. And got $I$ value is
+directly those value of $x$ shift that boat have to piece out. We have satisfy
+condition: $I + \Delta x = x^*$ or simpler $\Delta x = x^* -I$, where $\Delta x$
+is distance which boat have to overcome along $x$ axis to shoot into target on
+end of move along $y$ axis. let's define direction as variable $d\in\{-1;1\}$,
+so we have $$\Delta x = (s(\hat{y}) + d \cdot v)T_{hor} = x^*-I$$
+
+According to condition 1):
+if $d=-1$ then $\Delta x \le 0$, else if $d=1$ then $\Delta x \ge 0$ and 
+$\Delta x = 0$ only if $T_{hor}=0$. According to all mentioned about direction
+and $\Delta x$ we have next rule:
+$$d = B_-^+(\Delta x) = B_-^+(x^*-I)$$
+where $B_-^+$ is bipolar step function which frequently used in Machine 
+Learning. $B_-^+$ is my own designation which I hope is intuitive.
+$B_-^+(x)$ is $-1$ if $x<0$ and is $+1$ if $x \ge 0$.
+The reason why we get bipolar step function instead of signum function is that
+bipolar step function doesn't return zero. Zero could cause division by zero in
+future. And now we can get whole time of horizontal boat move:
+$$T_{hor} = \frac{x^*-I}{s(\hat{y}) + v B_-^+(x^*-I)}$$
+
+And now we can find whole boat move time as:
+$$T = T_{vrt} + T_{hor} = \frac{y^*}{v} + 
+\frac{x^*-I}{s(\hat{y}) + v B_-^+(x^*-I)}$$
+
+And boat trace will be next:
+At first boat moves directly vertical to reach line $y = \hat{y}$ for a time
+equals to $\frac{\hat{y}}{v}$ and it turns up in point
+$(v \int_{0}^{\frac{\hat{y}}{v}} s(vt)dt ; \hat{y})$.
+After that boat moves along $x$ axis for a time $T_{hor}$ and appears in point
+$(x^* - v \int_{\frac{\hat{y}}{v}}^{\frac{y^*}{v}} s(vt)dt ; \hat{y})$.
+After that boat moves again along $y$ axis for a time 
+$\frac{y^* - \hat{y}}{v}$ and shots directly to point $(x^*, y^*)$, 
+**which was to be proven**.
+
