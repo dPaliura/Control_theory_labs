@@ -13,12 +13,12 @@ knitr::opts_chunk$set(echo = FALSE)
 
 This document created as additional to 'Control Theory' subject first laboratory
 work 'Navigation Problem of Speed'. In this document will be researched
-dependence of input parameters to problem solving. Also reasons of effect will
-be explained if it's be possible.
+dependence of input parameters on problem solving. Also reasons of effect will
+be explained if it's possible.
 
 ## Formulation of the Navigation Problem of Speed
 
-It is boat on water surface which has to catch the immovable target placed on
+It's boat on water surface which has to catch the immovable target placed on
 the same water surface. Water has stream moving with some speed. 
 Formalized problem: to find boat control that moves boat to reach target. Boat
 is defined as material point which moves with constant speed $v$ relative to
@@ -27,13 +27,13 @@ where target does not moves, which means that water surface moves relatively to
 plane. Stream vector is parallel to ordinate axis ($Ox$) in each point of plane
 and perpendicular to abscissa axis ($Oy$) if it isn't zero vector. Absolute
 value of stream vector depends on $y$ coordinate and is described by expression:
-$$s(y)=s_0 \times f(y),$$
+$$s(y)=s_0 \cdot f(y),$$
 where  
 $s_0$ - stream speed multiplier or initial stream speed,  
 $f(y)$ - some defined function of stream speed dependence.
 Target is in point distanced on $l$ from origin and angle between $x$ axis and
 vector from origin to target is $\phi$, so target is in point
-$x^* = l \times cos(\phi), y^* = l \times sin(\phi)$
+$x^* = l \cdot cos(\phi), y^* = l \cdot sin(\phi)$.
 
 ## Solution method provided
 
@@ -47,9 +47,9 @@ method uses next recurrent formulae:
 $$\lambda(t_k)=v\tau\sqrt{(x^*-x_k-s(y_k)\tau)^2 + 
 (y^*-y_k)^2} - (v\tau)^2,$$
 where  
-$t_k = k\tau$ - moment of time on $k$ iteration 
-$x_k, y_k$ - coordinates of boat position in moment $t_k$
-$k = 0\cdots K, N \le K \in \mathbb{N}$
+$t_k = k\tau$ - moment of time on $k$ iteration,  
+$x_k, y_k$ - coordinates of boat position in moment $t_k$,  
+$k = 0\cdots K, N \le K \in \mathbb{N}$  
 and $t_0 = 0, x_0 = 0, y_0 = 0$.
 
 $$u_x(t_k) = v\tau \frac{x^*-x_k - \tau s(y_k)}
@@ -73,7 +73,7 @@ then $T^*=+\infty$.
 source('model.R', echo=FALSE)
 ```
 
-#### Boat speed
+### Boat speed
 
 Analyzing the problem formulation and given method we can got conclusion:  
 Stream moves the boat only by $x$ axis and hence must condition to reach the
@@ -82,17 +82,17 @@ $\forall y \in [0, y^*), |s(y)|< \infty$.
 This conclusion says that if stream speed is finite on the way then boat won't
 be blown into infinitely distant point from which it can't return to target. 
 It can be moved any far away but finitely. Also conditions $s(y)$ continuous
-and $v>s(y^*)$ are must to boat can reach such radius of $y^*$ where boat boat
-speed will exceed stream speed in each point on way to target, so boat will be
-approaching to target on it's way. 
+and $v>s(y^*)$ are must to boat can reach such radius of $y^*$ where boat
+speed will exceed stream speed in each point on way to the target, so boat will
+be approaching to target on it's way. 
 BUT it's must to say that **specified CONDITIONS are must but NOT SUFFICIENT**.
 It's so due to conditions doesn't provide that boat will converge those radius
 of $y^*$ where $v>s(y)$. If boat wouldn't aiming to target but would move only 
 by vertical first to reach such radius, then conditions would be sufficient.
 But for our case it can be the situation when 
 $\frac{du_y}{dt}=0$ while $t\to + \infty$, and hence 
-$y=\int_0^\infty u(t)dt < y^*$, where $y$ is boat coordinate. That's why named
-conditions is not sufficient.
+$y=\int_0^\infty u_y(t)dt < y^*$, where $y$ is boat coordinate. That's why named
+conditions are not sufficient.
 
 According to formulated sentences we can modify that method next way:
 boat must not decrease it's vertical speed less than some defined non-zero
@@ -101,11 +101,11 @@ number independently on how it close to $y^*$ just until it reach $y^*$.
 Now let's build some models for this method to variate speed parameter to see
 how boat speed affects on ability to reach target. We shall set parameters such
 way that it will be known stream speed in line $y=y^*$ to be able check our 
-hypothesis. So we will fix parameters except $v$ as next:
-$s_0 = 1$
-$l = 1$
-$\phi = \pi/2$
-$f(y) = 2-y$
+hypothesis. So we will fix parameters except $v$ as next:  
+$s_0 = 1$,  
+$l = 1$,  
+$\phi = \pi/2$,  
+$f(y) = 2-y$.  
 So according to formulated conditions we have:
 target in point $x^*=0, y^*=1$ and hence speed of stream decreasing from 2 to 1
 while approaching. So $s(y^*) = 1$ and it is expected that boat will reach 
@@ -314,17 +314,17 @@ build.model <- function(input.obj, maxiters = ..N*100){
 
 ```
 
-#### Stream initial speed
+### Stream initial speed
 
 It might be not hard to make conclusion that initial speed of stream affects on
 time spent to reach target and probably nonlinear. Also it will affect on boat
 trace.
 
-We will try to variate $s_0$ with next fixed values of other parameters:
-$v = 5$
-$l = 4$
-$\phi = \pi/2$
-$f(y) = sin(\frac{y\pi}{6} + \frac{\pi}{6})$
+We will try to variate $s_0$ with next fixed values of other parameters:  
+$v = 5$,  
+$l = 4$,  
+$\phi = \pi/2$,  
+$f(y) = sin(\frac{y\pi}{6} + \frac{\pi}{6})$.  
 Chosen expression for $f(y)$ provides values of it between 0.5 and 1 with values
 0.5 when $y \in \{0; y^*\}$. According to previous research we can variate
 initial stream speed as next: $s_0 \in \{0; 1; 3; 5; 7; 9; 11\}$.  
@@ -380,9 +380,9 @@ legend(leg.pos, legend = c('target',
 ```
 
 This plot may seem not very interesting, but there is one interesting moment 
-which could be noticed earlier. But first about dependence. As we can see time
-of boat reaching target depends nonlinear on stream speed. When initial stream
-speed approaches to such that whole stream spead near to speed of boat the time
+which could be noticed earlier. But first about dependence. As we can see the 
+time of target reach depends nonlinear on stream speed. When initial stream
+speed approaches to such that whole stream speed near to speed of boat the time
 increases much faster (the difference between time for $s_0=7$ and $s_0=9$ is
 much more than between $s_0=3$ and $s_0=5$). This parameter variation and 
 previous one says that boat speed must be much greater than stream speed to 
@@ -408,7 +408,7 @@ As we can see, it would be better to overcome middle part of way
 (about between 1 and 3) straight vertically to pass rapid stream as 
 fastest possible and hence to has least loss of distance on fighting stream.
 
-#### Distance to target
+### Distance to target
 
 This parameter may influence on time and nonlinear but about it. To try find 
 something interesting we will take next fixed parameters:
@@ -485,7 +485,7 @@ $l=200$ stream speed approaches very close to boat speed:
 $s(y^*)=2*log(\frac{200}{\sqrt{2}}+1) \approx 9.91758$, So boat lost a lot of
 time in this case due to reasons clarified before.
 
-#### Angle between stream vector and vector from origin to target
+### Angle between stream vector and vector from origin to target
 
 Parameter $\phi$ may affect directly on time and trace but as seen in previous
 great influence has function $f(y)$ because it defines how much stream affects
@@ -584,7 +584,7 @@ linear affect when angle around of $\pi k/4$ for $k \in \mathbb{Z}$.
 But as we viewed dependence when stream speed is constant the conclusion is not
 general.
 
-#### Stream speed function
+### Stream speed function
 
 This parameter was varied through researching other parameters and we found
 out that it can even make target unreachable. But in fact we can prove next
