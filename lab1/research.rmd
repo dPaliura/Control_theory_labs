@@ -14,7 +14,8 @@ knitr::opts_chunk$set(echo = FALSE)
 This document created as additional to 'Control Theory' subject first laboratory
 work 'Navigation Problem of Speed'. In this document will be researched
 dependence of input parameters on problem solving. Also reasons of effect will
-be explained if it's possible.
+be explained if it's possible.There wasn't said anything about boat turn speed
+so boat turn speed is neglected.
 
 ## Formulation of the Navigation Problem of Speed
 
@@ -650,22 +651,82 @@ $B_-^+(x)$ is $-1$ if $x<0$ and is $+1$ if $x \ge 0$.
 The reason why we get bipolar step function instead of signum function is that
 bipolar step function doesn't return zero. Zero could cause division by zero in
 future. And now we can get whole time of horizontal boat move:
-$$T_{hor} = \frac{x^*-I}{s(\hat{y}) + v B_-^+(x^*-I)}$$
+$$T_{hor} = \frac{x^*-I}{s(\hat{y}) + v d}$$
+It could be situation, when, for example, $s(y)\equiv 0, x^*=0$ so in such case
+stream shift would be zero, stream would be zero and hence we would have
+$\frac{0}{0}$ if we taken signum function instead of bipolar step function.
+And as $v \ne s(\hat{y})$ so in such case we would have zero division by some
+non-zero value. And it would be nice, because boat wouldn't move horizontally
+as it wouldn't need to.
 
-And now we can find whole boat move time as:
+Also whole boat move time as:
 $$T = T_{vrt} + T_{hor} = \frac{y^*}{v} + 
 \frac{x^*-I}{s(\hat{y}) + v B_-^+(x^*-I)}$$
 
-And boat trace will be next:
-At first boat moves directly vertical to reach line $y = \hat{y}$ for a time
+Boat trace will be next:  
+at first boat moves directly vertical to reach line $y = \hat{y}$ for a time
 equals to $\frac{\hat{y}}{v}$ and it turns up in point
-$(v \int_{0}^{\frac{\hat{y}}{v}} s(vt)dt ; \hat{y})$.
+$(v \int_{0}^{\frac{\hat{y}}{v}}t\cdot s(vt)dt ; \hat{y})$.
 After that boat moves along $x$ axis for a time $T_{hor}$ and appears in point
-$(x^* - v \int_{\frac{\hat{y}}{v}}^{\frac{y^*}{v}} s(vt)dt ; \hat{y})$.
+$(x^* - v \int_{\frac{\hat{y}}{v}}^{\frac{y^*}{v}}t\cdot s(vt)dt ; \hat{y})$.
 After that boat moves again along $y$ axis for a time 
 $\frac{y^* - \hat{y}}{v}$ and shots directly to point $(x^*, y^*)$, 
 **which was to be proven**.
 
+## Algorithm proposition
 
+As we found out next expression for the whole time:
+$$T = \frac{y^*}{v} + \frac{x^*-I}{s(\hat{y}) + v d}$$
+we can see that it depends on single variable $\hat{y}$ because all other values
+are constant in it, while due to $s(y)$ continuity there are many points which
+can be got as $\hat{y}$. So the idea is in next: at first we should find value
+$I$ by using numeric integration. Then we must find out point $\hat{y}$ as
+optimal point. And it can be maximum or minimum. To recognize which optimum to
+find we should know value for $d = B_-^+(x^*-I)$ and if $d=-1$ then we have to
+find minimum to provide positive value of $T_{hor}$ and else if $d=+1$ then we
+have to find maximum. Also such optimums will provide the greatest absolute
+value into divisor which will minimize whole fraction. So we have to find value
+$\hat{y}$ as mentioned optimum and after find the time for horizontal move of
+boat $T_{hor}$. 
+To build boat trace we have to make model with vertical control
+to level $y=\hat{y}$, then with horizontal control in direction defined as $d$
+and again with vertical control until reaching level $y=y^*$. It might be
+problem due to numeric methods used: boat might end not in directly target
+point. In such case if stream not faster than boat in target point than it could
+be pieced out when boat reaches level $y=y^*$.
 
+## Proposed algorithm step by step
+
+Set big number $N$. Split interval $[0, y^*]$ into $N$ intervals of same length.
+Having $y_i = i \cdot \frac{y^*}{N} = i \cdot \Delta y, i=0 \cdots N$ define
+$t_i = i \cdot \frac{\Delta y}{v} = i \cdot \Delta t$.  
+Set $x_0 = 0, y_0 = 0$.  
+Loop over $j=0 \cdots N-1$:  
+$x_{j+1} = x_j + \Delta t \cdot s(t_j)$;  
+$y_{j+1} = y_j + \Delta y$.  
+
+After loop ends set $I = x_N$ and $\Delta x = x^* - I$.  
+If $\Delta x=0$ then END with got trace through points $(x_i,y_i),i=0 \cdots N$;  
+If $\Delta x<0$ then find $\hat{y}=argmin_{y \in [0, y^*]}s(y)$ and set $d= -1$.  
+If $\Delta x>0$ then find $\hat{y}=argmax_{y \in [0, y^*]}s(y)$ and set $d= +1$;  
+
+Find such number $k, 1 \le k \le N$ that $y_{k-1} \le \hat{y} \le y_k$, in
+simple words, find the splitting interval which contains $\hat{y}$.
+
+Then find value 
+$\hat{x} = x_{k-1} + (x_k - x_{k-1})\frac{\hat{y} - y_{k-1}}{y_k - y_{k-1}}$.
+
+Loop over $j=N \cdots k$ (descending order):
+set indexes shift (thus looping on descending order) and boat shift by $x$ axis  
+$x_{j+2} = x_j + \Delta x$,  
+$y_{j+2} = y_j$
+
+And after loop there is last hatch.  
+Set $x_k = \hat{x}, y_k = \hat{y}$ and  
+$x_{k+1} = \hat{x} + \Delta x , y_{k+1} = \hat{y}$.  
+Done.
+
+Time of boat move should be calculated as such:  
+$T = \frac{y^*}{v} + \frac{\Delta x}{s(\hat{y}) + v d}$
+That's all.
 
