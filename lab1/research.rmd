@@ -613,9 +613,9 @@ According to conditions 2) and 3) the function $s(y)$ is Riemann intergable
 on interval $[0, y^*]$ according to the theorem (about continuous function
 integrability). Hence according to Riemann
 integral properties 
-$$\exists I_1 \equiv \int_{0}^{\hat{y}}s(y)dy$$
-$$\exists I_2 \equiv \int_{\hat{y}}^{y^*}s(y)dy$$
-and hence $$I = I_1 + I_2 = \int_{0}^{y^*}s(y)dy$$
+$$\exists I_1 \equiv \int_{0}^{\hat{y}}t(y)s(y)dy$$
+$$\exists I_2 \equiv \int_{\hat{y}}^{y^*}t(y)s(y)dy$$
+and hence $$I = I_1 + I_2 = \int_{0}^{y^*}t(y)s(y)dy$$
 
 This integral equals to whole boat shift through it's way, but it's depends on
 $y$ not on time $t$. If boat moves directly vertically from origin to level
@@ -627,7 +627,7 @@ so whole time only for pure vertical move will be:
 $$T_{vrt} = \frac{\hat{y}-0}{v} + \frac{y^*-\hat{y}}{v} = \frac{y^*}{v}$$.
 And while moving vertically we have $y(t) = vt$, so $dy = vdt$.
 So now we can say that:
-$$I = v \int_{0}^{\frac{y^*}{v}}s(vt)dt$$
+$$I = v \int_{0}^{\frac{y^*}{v}}t s(vt)dt$$
 But there is some issue: boat won't move it's whole way by $y$ coordinate. The
 idea is to move boat to such $y$ coordinate where absolute stream speed will be
 less than boat's speed so that boat could move by $x$ axis in any way. Got
@@ -665,4 +665,7 @@ $(x^* - v \int_{\frac{\hat{y}}{v}}^{\frac{y^*}{v}} s(vt)dt ; \hat{y})$.
 After that boat moves again along $y$ axis for a time 
 $\frac{y^* - \hat{y}}{v}$ and shots directly to point $(x^*, y^*)$, 
 **which was to be proven**.
+
+
+
 
