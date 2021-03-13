@@ -716,7 +716,7 @@ simple words, find the splitting interval which contains $\hat{y}$.
 Then find value 
 $\hat{x} = x_{k-1} + (x_k - x_{k-1})\frac{\hat{y} - y_{k-1}}{y_k - y_{k-1}}$.
 
-Loop over $j=N \cdots k$ (descending order):
+Loop over $j=N \cdots k$ (descending order):  
 set indexes shift (thus looping on descending order) and boat shift by $x$ axis  
 $x_{j+2} = x_j + \Delta x$,  
 $y_{j+2} = y_j$
@@ -727,6 +727,76 @@ $x_{k+1} = \hat{x} + \Delta x , y_{k+1} = \hat{y}$.
 Done.
 
 Time of boat move should be calculated as such:  
-$T = \frac{y^*}{v} + \frac{\Delta x}{s(\hat{y}) + v d}$
+$$T = \frac{y^*}{v} + \frac{\Delta x}{s(\hat{y}) + v d}$$
 That's all.
+
+## Proposed algorithm test and comparison
+
+Algorithm written on R language is next:
+
+```{r proposed algorithm function, echo=TRUE}
+my.model <- function(input, N = 1e3){
+    v <- input$v
+    s0 <- input$s0
+    l <- input$l
+    phi <- input$phi
+    f <- input$f
+    
+    target <- l * c(cos(phi), sin(phi))
+    s <- function(y) s0 * f(y)
+    
+    y <- 0:N * target[2] / N
+    dy <- target[2] / N
+    t <- y/v
+    dt <- dy/v
+    
+    x <- 0
+    for (j in 1:N){
+        x <- c(x, x[j] + dt*s(y[j]))
+    }
+    
+    I <- x[N+1]
+    Dx <- target[1] - I
+    
+    T_ver <- t[N+1]
+    
+    if (Dx == 0) return(list(points = cbind(x, y),
+                             time = T_ver,
+                             target = target))
+    if (Dx < 0){
+        d <- -1
+        y_hat <- optimize(f, c(0, target[2]))$minimum
+    }
+    if (Dx > 0){
+        d <- +1
+        y_hat <- optimize(f, c(0, target[2]), maximum = TRUE)$maximum
+    }
+    
+    k <- which((y[1:N] <= y_hat) & (y_hat <= y[(1:N)+1]))
+    
+    x_hat <- x[k] + (x[k+1]-x[k])*(y_hat-y[k])/(y[k+1]-y[k])
+    
+    T_hor <- Dx / (s(y_hat) + v*d)
+    
+    return(list(points=rbind(cbind(x[1:k], y[1:k]),
+                             c(x_hat, y_hat),
+                             c(x_hat+Dx, y_hat),
+                             cbind(x[(k:N)+1]+Dx, y[(k:N)+1])),
+                time = T_ver + T_hor,
+                target = target))
+}
+```
+
+Test it on parameters for my laboratory variant (aiming method wasn't provide
+target catch).
+
+```{r}
+source('input.R', echo = FALSE)
+cat('Input:\n')
+print(.default.input)
+model2 <- my.model(.default.input)
+plot(model2$points[,1], model2$points[,2], type='l')
+points(model2$target[1], model2$target[2], pch=4, col='red')
+cat('Time is', model2$time)
+```
 
