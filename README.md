@@ -9,7 +9,7 @@ which were accomplished by **Daniel Paliura** - student of KM-73 group
 (2017-2021 study years) of NTUU "Igor Sikorsky KPI".
 
 Contents:
-Laboratory work 1 'Navigation Problem of Speed' - folder lab1
+Laboratory work 1 'Navigation Problem of Speed' - folder [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
 
 ### Laboratory work 1
 
@@ -25,6 +25,14 @@ l - distance to target from origin,
 phi - angle between abscissa axis and vector from origin to target.
 v, s0, l, phi, f(y) - problem parameters. It is set to solve problem by aiming
 method.
+
+Laboratory work task includes research of problem parameters influence. Research
+was made and it was proposed alternative algorithm of the problem solution.
+Proposed algorithm was compared to aiming method.
+File in directory lab1
+[report.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab1/research.pdf)
+contains full research of parameters, target reach conditions formulation and
+prove, proposed algorithm formulation and implementation with R language.
 
 Program developed with R language (R version 4.0.4) in RStudio Desktop 
 environment under Ubuntu 20.4.
@@ -62,7 +70,7 @@ is asked to restart program.
 КМ-73 (2017-2021 навчальні роки) НТУУ "КПІ ім. Ігоря Сікорського". 
 
 Зміст:
-Лабораторна робота 1 'Навігаційна задача швидкодії' - папка lab1
+Лабораторна робота 1 'Навігаційна задача швидкодії' - папка [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
 
 ### Лабораторна робота 1
 
@@ -78,6 +86,15 @@ phi - кут між віссю абсцис та вектором, що спол
     точку цілі.
 v, s0, l, phi, f(y) - параметри задачі. Задачу поставлено вирішувати методом 
 прицілювання.
+
+Також поставлено задачу дослідити вплив параметрів описаної задачі. Дослідження
+було проведено і також було запропоновано альтернативний алгоритм.
+Запропонований алгоритм було порівняно із методом прицілювання.
+Файл
+[report.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab1/research.pdf)
+в директорії lab1 містить повне дослідження, формулювання та
+доведення умов досяжності цільової точки, запропонований алгоритм та його
+реалізацію на мові R.
 
 Розроблена програма написана мовою програмування R (R version 4.0.4).
 Розроблена в середовищі RStudio Desktop в операційній системі Ubuntu 20.4.
