@@ -1,6 +1,10 @@
+# Some big number to be used in aiming method
 ..N <- 1e3
 
 
+# Returns list of:
+# boat next position after current control
+# vector of boat control in current point
 ..model.control <- function(boat, target, v, S.fun, tau){
     s <- S.fun(boat)
     x <- boat[1]
@@ -26,9 +30,35 @@
 }
 
 
+# Returns Euclidean length of vector x
 .euclidean.length <- function(x) sqrt(sum(x^2))
 
 
+# Solves Navigation Problem of Speed for fixed target.
+# Input:
+#   input.obj - list of 5 problem parameters. Must be defined with names:
+#       v - boat speed
+#       s0 - initial stream speed
+#       l - distance to target
+#       phi - angle between x axis and vector from origin to target
+#       f - function of variable y which is dependence of stream speed
+#       v, s0, l, phi can be set as R expressions
+#   maxiters - number of iterations after which algorithm stops without target
+#              reach
+# Value is list of 10:
+#   input - parameter input.obj
+#   target - numeric vector of target coordinates in x0y
+#   boat.states - matrix of boat states through it's move to target.
+#                 contains x, y, t in columns - coordinates and time when in it
+#   target.achieved - logical, TRUE if algorithm stopped after boat achieved
+#                     target.
+#   control - matrix of controls spelled while move.
+#             Controls by x and y in 2 columns.
+#   time - whole time spent to reach target. If target not reached then time=Inf
+#   iters - number of iterations made by algorithm
+#   message - if something gone wrong, this variable contains message about it.
+#   N - big number used
+#   tau - small time interval got through division by big number N
 build.model <- function(input.obj, maxiters = ..N*50){
     N <- ..N
 

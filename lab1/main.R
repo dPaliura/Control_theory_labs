@@ -1,3 +1,9 @@
+# Function to get path of THIS script file on it's run
+#
+# got from:
+# https://stackoverflow.com/a/36777602
+#
+# improved to return way of script run
 ez.csf <- function() {
     # http://stackoverflow.com/a/32016824/2292993
     cmdArgs = commandArgs(trailingOnly = FALSE)
@@ -60,11 +66,14 @@ ez.csf <- function() {
 run <- ez.csf()
 path <- sub('main.R', '', run$path)
 
+
 source(paste0(path, 'input.R'), echo = FALSE)
 source(paste0(path, 'model.R'), echo = FALSE)
 source(paste0(path, 'output.R'), echo = FALSE)
 
 
+# Program main loop
+# Call it to run program
 main <- function(){
     while (TRUE){
         tryCatch(
@@ -87,4 +96,5 @@ main <- function(){
 }
 
 
+# Run program
 main()
