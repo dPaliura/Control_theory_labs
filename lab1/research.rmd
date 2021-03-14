@@ -3,6 +3,7 @@ title: "Navigation Problem of Speed research for parameters dependence"
 author: "Daniel Paliura"
 date: "3/11/2021"
 output: pdf_document
+urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
@@ -593,7 +594,8 @@ try to prove this in next part.
 
 ## Reach condition proof
 
-Conditions says that: 1) $\exists \hat{y} \in [0, y^*]: |s(\hat{y})|<v$\
+Conditions says that:\
+1) $\exists \hat{y} \in [0, y^*]: |s(\hat{y})|<v$\
 2) $s:\mathbb{R} \to \mathbb{R}$ is continuous\
 3) $\forall y \in [0, y^*]: |s(y)| < \infty$
 
@@ -716,7 +718,7 @@ Done.
 Time of boat move should be calculated as such:\
 $$T = \frac{y^*}{v} + \frac{\Delta x}{s(\hat{y}) + v d}$$ That's all.
 
-## Proposed algorithm test and comparison
+## Proposed algorithm test
 
 Algorithm written on R language is next:
 
@@ -834,6 +836,8 @@ compare(model.3, model_3)
 compare(model.4, model_4)
 ```
 
+## Proposed algorithm comparison with aiming method
+
 We see that proposed algorithm works nice but not always provides better time
 than aiming does. It was expected. Analyzing traces we can notice that algorithm
 makes hook when stream speed decreasing near target. The problem of aiming was
@@ -865,7 +869,7 @@ check for mistakes.
 
 ## Conclusions
 
-* Formulated [must conditions](#aim_reach_must_cond) to solve problem with 
+* Formulated [must conditions](#boat-speed) to solve problem with 
   aiming method.
 * Relations between boat speed and stream speed affects very much on ability to
   reach target. And also stream they are affect on time for target reaching.
@@ -877,12 +881,13 @@ check for mistakes.
   boat reach target. It affects on time very much if boat moves by aiming,
   because for different functions with same mean value time should be different.
   Probably this parameter must be first while choosing method to solve problem.
-* Formulated and proved [sufficient conditions](#reach_suff_cond) to solve
+* Formulated and proved [sufficient conditions](#reach-condition-proof) to solve
   problem if boat moves between $y=0$ and $y=y^*$ lines.
-* Proposed [algorithm](#my_algorithm) which provide problem solution if
+* [Proposed algorithm](#algorithm-proposition) which provide problem solution if
   sufficient conditions satisfied.
-* Proposed algorithm [coded](#my_algorithm_code).
+* Proposed algorithm [coded and tested](#proposed-algorithm-test).
 * Proposed algorithm compared with aiming method and it was found out that it
   gives better result when stream faster near target than near origin (like it
   used to be on rivers).
-* [Advantages and disadvantages](#adv_and_disadv) found for proposed algorithm.
+* [Advantages and disadvantages](#proposed-algorithm-comparison-with-aiming-method)
+  found for proposed algorithm.
