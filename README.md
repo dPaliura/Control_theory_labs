@@ -8,7 +8,7 @@ This repo was created for holding laboratory works for the subject "Control Theo
 which were accomplished by **Daniel Paliura** - student of KM-73 group 
 (2017-2021 study years) of NTUU "Igor Sikorsky KPI".
 
-Contents:
+Contents:  
 Laboratory work 1 'Navigation Problem of Speed' - folder [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
 
 ### Laboratory work 1
@@ -71,7 +71,7 @@ the user is asked to restart the program.
 "Теорія Керування" , що виконав **Палюра Данило Валерійович** - студент групи 
 КМ-73 (2017-2021 навчальні роки) НТУУ "КПІ ім. Ігоря Сікорського". 
 
-Зміст:
+Зміст:  
 Лабораторна робота 1 'Навігаційна задача швидкодії' - папка [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
 
 ### Лабораторна робота 1
