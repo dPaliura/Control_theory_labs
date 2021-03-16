@@ -4,7 +4,7 @@ Languages: [EN](#EN) | [UA](#UA) | [RU](#RU)
 
 ## EN
 
-This repo created for holding laboratory works for subject "Control Theory",
+This repo was created for holding laboratory works for the subject "Control Theory",
 which were accomplished by **Daniel Paliura** - student of KM-73 group 
 (2017-2021 study years) of NTUU "Igor Sikorsky KPI".
 
@@ -13,54 +13,56 @@ Laboratory work 1 'Navigation Problem of Speed' - folder [lab1](https://github.c
 
 ### Laboratory work 1
 
-Task of this work is in to find control of boat which moves on plane from point
-(0, 0) to some stable target with speed v. There is a vector field of stream on
-plane. Vector of stream is parallel to abscissa and perpendicular to ordinate in
-each plane point. Speed of stream is dependent of y coordinate and expressed as
+The task of this work is to find control of boat which moves on a plane from
+point
+(0, 0) to some stable target with speed v. There is a vector field of the stream
+on a plane. The vector of the stream is parallel to abscissa and perpendicular
+to ordinate in each plane point. Speed of stream is dependent of y coordinate
+and expressed as
 s(y) = s0 * f(y), 
 where s0 - initial speed of stream (on abscissa axis), f(y) - some function, for
 example, f(y) = sin(y). Target point defined in Polar Coordinate system with
 next parameters:
-l - distance to target from origin,
-phi - angle between abscissa axis and vector from origin to target.
-v, s0, l, phi, f(y) - problem parameters. It is set to solve problem by aiming
-method.
+l - distance to the target from the origin,
+phi - the angle between the abscissa axis and vector from the origin to target.
+v, s0, l, phi, f(y) - problem parameters. It is set to solve the problem with
+the aiming method.
 
-Laboratory work task includes research of problem parameters influence. Research
-was made and it was proposed alternative algorithm of the problem solution.
-Proposed algorithm was compared to aiming method.
+Laboratory work task includes research of problem parameters influence. The
+research was made and it was proposed an alternative algorithm of the problem
+solution. The proposed algorithm was compared to the aiming method.
 File in directory lab1
 [report.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab1/research.pdf)
 contains full research of parameters, target reach conditions formulation and
-prove, proposed algorithm formulation and implementation with R language.
+proof, proposed algorithm formulation and implementation with R language.
 
 Program developed with R language (R version 4.0.4) in RStudio Desktop 
 environment under Ubuntu 20.4.
 
-To run program you need to run script main.R inside lab1 folder. Other scripts
-must be in the same folder with main.R script.
+To run the program you need to run script main.R inside the lab1 folder.
+Other scripts must be in the same folder as main.R script.
 
-The result of program run is description of input data, description of key model
-variables and plot with boat movement to target.
+The result of program run contains a description of input data, description of
+key model variables, and plot with boat movement to the target.
 
-One great issue of this problem solution is used method. It is not always 
-achievable target will be reached with used method. For example, in my variant
-where parameters are set as:
+One great issue of this problem solution is the used method. It is not always 
+achievable target will be reached with the used method. For example, in my
+variant where parameters are set as:
 s0 = sqrt(n), v = sqrt(n), l = n, phi = n*pi/25, f(y) = y; 
-n = 15 - student number in group list.
-In fact, stream blows boat to the side when it approaches to target by vertical.
-Given method does not work when n > 2. But it is obviously solvable, because of
-f(y) could be used to move around to be blown to the target side by the stream
-direction afterward.
+n = 15 - the student's number in group list.
+Stream blows boat to the side when it approaches to target by vertical.
+Given method does not work when n > 2. But it is solvable because f(y) could be
+used to move around to be blown to the target side by the stream direction
+afterward.
 
-Developed program foreseen two ways of data input:
-+ By default - input data according to variant with n = 15
-+ By hand - each parameter must be entered by user through console. And it is
-  available to use R language: you can use built-in functions as cos(), exp(), 
-  sqrt(), log() and other mathematical functions and expressions. It is needed
-  to be evaluated as numbers.
-Also program is restartable. After model compilation and interpretation the user
-is asked to restart program.
+The developed program foresees two ways of data input:
++ By default - input data according to the variant with n = 15
++ By hand - each parameter must be entered by the user through the console.
+  And it is available to use R language: you can use built-in functions as
+  cos(), exp(), sqrt(), log() and other mathematical functions and expressions.
+  It is needed to be evaluated as numbers.
+Also, the program is restartable. After model compilation and interpretation,
+the user is asked to restart the program.
 
 
 ## UA
