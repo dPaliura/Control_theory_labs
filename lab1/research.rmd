@@ -12,27 +12,26 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Introduction
 
-This document created as additional to 'Control Theory' subject first laboratory
-work 'Navigation Problem of Speed'. In this document will be researched
-dependence of input parameters on problem solving. Also reasons of effect will
-be explained if it's possible.There wasn't said anything about boat turn speed
-so boat turn speed is neglected.
+This document was created as additional to 'Control Theory' subject first
+laboratory work 'Navigation Problem of Speed'. This document contains research
+for a dependence of input parameters on the problem solution. Also, the cause of
+the influence will be explained if it's possible. 
 
-We will think that boat can be both rowboat and motorboat. Also stream will be
-recognized as unidirectional in each point, because it such in rivers and can
-be recognized such way in oceans or seas. So we will think that stream doesn't
+We will think that boat can be both rowboat or motorboat. Also, the stream will
+be recognized as unidirectional at each point, because it is such in rivers and
+can be recognized so in oceans or seas. So we will think that stream doesn't
 change it's direction on boat's way from origin to target.
-
+There wasn't said anything about boat turn speed so boat turn speed is
+neglected.
 
 ## Formulation of the Navigation Problem of Speed
 
-It's boat on water surface which has to catch the immovable target placed on the
-same water surface. Water has stream moving with some speed. Formalized problem:
-to find boat control that moves boat to reach target. Boat is defined as
-material point which moves with constant speed $v$ relative to water surface.
-Initially boat is in origin - point $(0,0)$ - of plane $xOy$, where target does
-not moves, which means that water surface moves relatively to plane. Stream
-vector is parallel to ordinate axis ($Ox$) in each point of plane and
+It's the boat on the water surface that has to catch the immovable target placed
+on the same water surface. Water has stream moving with some speed.\
+Formalized problem:\
+to find the boat control that moves the boat to reach the target. The boat is
+defined as a material point that moves with constant speed $v$ relative to water surface. Initially boat is in origin - point $(0,0)$ - of plane $xOy$, where
+target does not moves, which means that water surface moves relatively to plane. Stream vector is parallel to ordinate axis ($Ox$) in each point of plane and
 perpendicular to abscissa axis ($Oy$) if it isn't zero vector. Absolute value of
 stream vector depends on $y$ coordinate and is described by expression:
 $$s(y)=s_0 \cdot f(y),$$
@@ -40,36 +39,36 @@ where
 $s_0$ - stream speed multiplier or initial stream speed,\
 $f(y)$ - some defined function of stream speed dependence. Target is in point
 distanced on $l$ from origin and angle between $x$ axis and vector from origin
-to target is $\phi$, so target is in point
+to target is $\phi$, so the target is in point
 $x^* = l \cdot cos(\phi), y^* = l \cdot sin(\phi)$.
 
 ## Solution method provided
 
 To solve this problem was spelled aiming method, which chooses best control
-vector in current point considering stream speed in point. In this method the
-speed of stream is considered as constant for small time interval 
+vector in current point considering stream speed in point. In this method, the
+speed of stream is considered as constant for a small time interval 
 $\tau=\frac{l}{vN}$, where $N$ is some large number. I set $N=1e3$.\
-According to analytic calculations (Lagrange polynomial optimization) method
-uses next recurrent formulae:
+According to analytic calculations (Lagrange polynomial optimization), method
+uses following recurrent formulas:
 $$\lambda(t_k)=v\tau\sqrt{(x^*-x_k-s(y_k)\tau)^2 + 
 (y^*-y_k)^2} - (v\tau)^2,$$
 where  
-$t_k = k\tau$ - moment of time on $k$ iteration,\
-$x_k, y_k$ - coordinates of boat position in moment $t_k$,\
+$t_k = k\tau$ - the time moment on $k$ iteration,\
+$x_k, y_k$ - coordinates of boat position at moment $t_k$,\
 $k = 0\cdots K, N \le K \in \mathbb{N}$\
 and $t_0 = 0, x_0 = 0, y_0 = 0$.
 
 $$u_x(t_k) = v\tau \frac{x^*-x_k - \tau s(y_k)} {\lambda(t_k)-(v\tau)^2},$$ 
 $$u_y(t_k) = v\tau \frac{y^*-y_k} {\lambda(t_k)-(v\tau)^2}$$ 
 $u_x, u_y$ should be recognized as boat control in moment $t_k$. Hence next
-position defined by formulae:
+position defined by formulas:
 $$x_{k+1} = x_k + \tau(s(y_k) + u_x(t_k)v),$$
 $$y_{k+1} = y_k + u_y(t_k)v\tau$$
-To exclude infinite looping when target cannot be reached we shall set some
+To exclude infinite looping when the target cannot be reached we shall set some
 maximum number of iterations as $K > N$ so $k \le K$, and if $x_k=x^*, y_k=y^*$
 (target reached) then we have to define $K=k$.
 
-Full time of reaching the target is $T^*=\tau K$ if target reached, and if not
+The full time of reaching the target is $T^*=\tau K$ if target reached, and if not
 then $T^*=+\infty$.
 
 ## Parameters effect research
@@ -80,48 +79,50 @@ source('model.R', echo=FALSE)
 
 ### Boat speed
 
-Analyzing the problem formulation and given method we can got conclusion:\
+Analyzing the problem formulation and given method we can get the conclusion:\
 Stream moves the boat only by $x$ axis and hence must condition to reach the
 target is $v>s(y^*)$, $s(y)$ is continuous on interval $y \in [0, y^*]$ and 
 $\forall y \in [0, y^*), |s(y)|< \infty$. This conclusion says that if stream
-speed is finite on the way then boat won't be blown into infinitely distant
-point from which it can't return to target. It can be moved any far away but
-finitely. Also conditions $s(y)$ continuous and $v>s(y^*)$ are must to boat can
-reach such radius of $y^*$ where boat speed will exceed stream speed in each
-point on way to the target, so boat will be approaching to target on it's way.
-BUT it's must to say that **specified CONDITIONS are must but NOT SUFFICIENT**.
-It's so due to conditions doesn't provide that boat will converge those radius
-of $y^*$ where $v>s(y)$. If boat wouldn't aiming to target but would move only
-by vertical first to reach such radius, then conditions would be sufficient.
-But for our case it can be the situation when $\frac{du_y}{dt}=0$ while
-$t\to + \infty$, and hence $y=\int_0^\infty u_y(t)dt < y^*$, where $y$ is boat
-coordinate. That's why named conditions are not sufficient.
+speed is finite on the way then the boat won't be blown into an infinitely
+distant point from which it can't return to target. It can be moved any far away
+but finitely. Also, conditions $s(y)$ continuous and $v>s(y^*)$ are must for the
+boat to be able to reach such a radius of $y^*$ where boat speed will exceed
+stream speed in each point on way to the target, so the boat will be approaching
+to target on its way.
+BUT it must be said that **specified CONDITIONS are must but NOT SUFFICIENT**.
+It's so due to conditions don't guarantee that boat will converge that radius
+of $y^*$ where $v>s(y)$. If the boat wouldn't aiming to target but would move
+only by vertical first to reach such radius, then conditions would be
+sufficient. But for our case, it can be the situation when $\frac{du_y}{dt}=0$
+while $t\to + \infty$, and hence $y=\int_0^\infty u_y(t)dt < y^*$, where $y$ is
+boat coordinate. That's why named conditions are not sufficient.
 
-According to formulated sentences we can modify that method next way: boat must
-not decrease it's vertical speed less than some defined non-zero number
-independently on how it close to $y^*$ just until it reach $y^*$.
+According to formulated sentences, we can modify that method the next way: the
+boat must not decrease its vertical speed less than some predefined non-zero
+number independently on how it close to $y^*$ just until it reach $y^*$.
 
-Now let's build some models for this method to variate speed parameter to see
-how boat speed affects on ability to reach target. We shall set parameters such
-way that it will be known stream speed in line $y=y^*$ to be able check our
-hypothesis. So we will fix parameters except $v$ as next:\
+Now let's build some models for this method to vary speed parameter to see
+how boat speed affects on ability to reach target. We shall set parameters in
+such a way that stream speed will be known in line $y=y^*$ to have the ability
+to check our hypothesis. So we will fix parameters except $v$ as next:\
 $s_0 = 1$,\
 $l = 1$,\
 $\phi = \pi/2$,\
 $f(y) = 2-y$.\
-So according to formulated conditions we have: target in point $x^*=0, y^*=1$
+So, according to formulated conditions, we have: target in point $x^*=0, y^*=1$
 and hence speed of stream decreasing from 2 to 1 while approaching.
-So $s(y^*) = 1$ and it is expected that boat will reach target with speed
+So $s(y^*) = 1$ and it is expected that boat will reach a target with a speed
 greater than 1.
 
-We could take $f(y)=sin(\frac{y\pi}{2})$ but in such case it would be situation
-when stream speed wouldn't move boat from target because it's speed would be
-less than boat's on whole way. And boat would go to target directly.
+We could take $f(y)=sin(\frac{y\pi}{2})$ but in such a case it would be the
+situation when stream speed wouldn't move the boat from target because its speed
+would be less than the boat's on the whole way. And the boat would go to target
+directly.
 
-To see influence of boat speed we will build models for set of speeds:
-$V=\{0.8; 0.98; 1; 1.02; 1.2\}$ and see which ones will let boat to reach
+To see the influence of boat speed we will build models for a set of speeds:
+$V=\{0.8; 0.98; 1; 1.02; 1.2\}$ and see which ones will let the boat reach
 target.\
-Traces shown on plot:
+Traces are shown on the plot:
 
 ```{r define.legend.position function definition}
 define.legend.position <- function(xlim, ylim, pts){
@@ -197,9 +198,9 @@ legend(leg.pos, legend = c('target',
        lwd = c(NA, rep(2, 5)))
 ```
 
-As we can see, there are 3 cases when boat can't reach target and all they are
-when $v \le s(y^*)=1$ as it was expected. In such case it is proofed to add
-constraint to stop algorithm when $y=y^*, x \ne x^*$ and $v \le s(y^*)$.
+As we can see, there are 3 cases when the boat can't reach the target, and all
+they are when $v \le s(y^*)=1$ as it was expected. In such case, it is proofed
+to add constraint to stop algorithm when $y=y^*, x \ne x^*$ and $v \le s(y^*)$.
 
 ```{r model improvement}
 ..model.control <- function(boat, target, v, S.fun, tau){
@@ -317,10 +318,10 @@ build.model <- function(input.obj, maxiters = ..N*100){
 
 ### Stream initial speed
 
-It might be not hard to make conclusion that initial speed of stream affects on
-time spent to reach target and probably nonlinear. Also it will affect on boat
+It might be not hard to conclude that the initial stream speed affects the time
+spent to reach the target and probably nonlinear. Also, it will affect boat
 trace.\
-We will try to variate $s_0$ with next fixed values of other parameters:\
+We will try to vary $s_0$ for next fixed values of other parameters:\
 $v = 5$,\
 $l = 4$,\
 $\phi = \pi/2$,\
@@ -328,7 +329,7 @@ $f(y) = sin(\frac{y\pi}{6} + \frac{\pi}{6})$.\
 Chosen expression for $f(y)$ provides values of it between 0.5 and 1 with values
 0.5 when $y \in \{0; y^*\}$. According to previous research we can variate
 initial stream speed as next: $s_0 \in \{0; 1; 3; 5; 7; 9; 11\}$.\
-Traces shown on plot:
+Traces are shown on the plot:
 
 ```{r initial stream speed variation building models}
 v <- 5
@@ -383,17 +384,18 @@ legend(leg.pos, legend = c('target',
 This plot may seem not very interesting, but there is one interesting moment
 which could be noticed earlier. But first about dependence. As we can see the
 time of target reach depends nonlinear on stream speed. When initial stream
-speed approaches to such that whole stream speed near to speed of boat the time
-increases much faster (the difference between time for $s_0=7$ and $s_0=9$ is
-much more than between $s_0=3$ and $s_0=5$). This parameter variation and
-previous one says that boat speed must be much greater than stream speed to
-reach target fast. And also in such cases stream speed affect much less on time
-if aiming method used. But more interesting are curves. We can see, that it's
-forms (especially when $s_0=9$) has bend near line $y=y^*$. It's interesting
-because we may make conclusion that boat slides vertically and moves faster to
-target by $y$ coordinate at first time, but then it slows vertical move loosing
-speed for fighting stream speed. But we should be careful making such
-conclusions. Let's see on plot of $f(y)$ speed dependence:
+speed approaches such that whole stream speed near to the speed of the boat,
+the time increases much faster (the difference between the time for $s_0=7$ and
+$s_0=9$ is much more than between $s_0=3$ and $s_0=5$).
+This parameter and the previous one variations says that boat speed must be much
+greater than stream speed to reach the target fast. And also, in such cases,
+stream speed affects much less on time if the aiming method is used. But more
+interesting are curves. We can see that their forms (especially when $s_0=9$)
+have a bend near the line $y=y^*$. It's interesting because we may conclude
+that boat slides vertically and moves faster to the target by $y$ coordinate at
+the first time, but then it slows vertical move loosing speed for fighting
+stream speed. But we should be careful making such conclusions.
+Let's see on the plot of $f(y)$ speed dependence:
 
 ```{r function f sin plot}
 Y <- 0:400/100
@@ -404,19 +406,19 @@ plot(X, Y,
      xlab = 'f(y)', ylab = 'y')
 ```
 
-As we can see, it would be better to overcome middle part of way
+As we can see, it would be better to overcome the middle part of the way
 (about between 1 and 3) straight vertically to pass rapid stream as fastest
 possible and hence to has least loss of distance on fighting stream.
 
 ### Distance to target
 
-This parameter may influence on time and nonlinear but about it. To try find
-something interesting we will take next fixed parameters:
+This parameter may influence on time and nonlinear but about it. To find
+something interesting we will fix parameters next way:
 $v = 10$ $s_0 = 2$ $\phi = \pi/4$ $f(y) = log(y+1)$
 And variate $l \in L=\{5; 10; 20; 50; 100; 200\}$.
-As we took $\phi = \pi/4$ we expect that stream will help the boat to reach
+As we took $\phi = \pi/4$, we expect that stream will help the boat to reach
 target faster on low distances.\
-Traces shown on plot:
+Traces are shown on the plot:
 
 ```{r distance variation building models}
 v <- 10
@@ -471,25 +473,27 @@ legend(leg.pos, legend = c('target',
        lwd = c(NA, rep(2, 6)))
 ```
 
-Without stream the time would be $T = \{0.5; 1; 2; 5; 10; 20\}$, but with stream
-we have times less than without stream for $l \le 50$ and for $l=10, l=20$ there
-is the best profit of stream, which notably from traces (green and dark blue).
-Boat doesn't do a hook due to stream. In first case (red line) there is almost
-no profit of stream because it's speed very small on whole way. When $l=50$ boat
-already made a hook but still won more time on moving by stream than lost on
-hook. And for more distant points $l=100, l=200$, boat already lost more time on
-hook than it got by moving along stream. Also for $l=200$ stream speed
+Without stream, the time would be $T = \{0.5; 1; 2; 5; 10; 20\}$, but with the 
+stream, we have times less than without stream for $l \le 50$ and with
+$l=10, l=20$ there is the best profit of stream, which notably from traces 
+(green and dark blue). The boat doesn't make a hook due to the stream. In the
+first case (red line), there is almost
+no profit of stream because its speed is very small on the whole way.
+When $l=50$ the boat already made a hook but still won more time on moving by
+the stream than lost on a hook. And for more distant points $l=100, l=200$, the
+boat already lost more time on a hook than it got by moving along the stream.
+Also for $l=200$ stream speed
 approaches very close to boat speed:
 $s(y^*)=2*log(\frac{200}{\sqrt{2}}+1) \approx 9.91758$,
-So boat lost a lot of time in this case due to reasons clarified before.
+So the boat lost a lot of time in this case due to reasons clarified before.
 
 ### Angle between stream vector and vector from origin to target
 
-Parameter $\phi$ may affect directly on time and trace but as seen in previous
+Parameter $\phi$ may affect directly on time and trace but, as seen earlier,
 great influence has function $f(y)$ because it defines how much stream affects
-on boat. We will take each $\pi/6$ angle as $\phi$ in interval $[0, \pi]$. Other
-parameters will be next: $v = 1$ $s_0 = 0.5$ $l = 5$ $f(y) = 1$\
-Traces shown on plot:
+on the boat. We will take each $\pi/6$ angle as $\phi$ in interval $[0, \pi]$.
+Other parameters will be next: $v = 1$ $s_0 = 0.5$ $l = 5$ $f(y) = 1$\
+Traces are shown on the plot:
 
 ```{r phi angle variation building models}
 v <- 1
@@ -545,11 +549,11 @@ legend(leg.pos, legend = c('target',
        ncol=2)
 ```
 
-It was expected that time depends on angle, it's because angle defines how much
-boat will move against stream. It is interesting which dependence between angle
-and time. To view it we will make more models for angles on $[0, 2\pi]$. It's OK
-that target will be lower than $x$ axis in some cases, method allows it. Other
-parameters will left the same.
+It was expected that the time depends on the angle, it's because the angle
+defines how much the boat will move against the stream. It is interesting which
+dependence between angle and time. To view it I will make more models for angles
+$[0, 2\pi]$. It's OK that the target will be lower than the $x$ axis in some
+cases, the method allows it. Other parameters will be left the same.
 
 ```{r phi angle detailed variation building models}
 Phi <- 0:60*pi/30
@@ -573,24 +577,24 @@ legend(x='bottom', legend=c('dependence', 'sin(phi - pi/2)*10/3 + 20/3'),
 ```
 
 Dependence was such interesting and simple that I tried and built some sinus
-line which similar to got dependence. According to this plot we can conclude
-that angle almost doesn't affect on time when angle near to 0 or $\pi k$, but
-almost linear affect when angle around of $\pi k/4$ for $k \in \mathbb{Z}$. But
+line which is similar to got dependence. According to this plot, we can conclude
+that angle almost doesn't affect time when angle is near to 0 or $\pi k$ but
+affects almost linear when is around $\pi k/4$ for $k \in \mathbb{Z}$. But
 as we viewed dependence when stream speed is constant the conclusion is not
 general.
 
 ### Stream speed function
 
 This parameter was varied through researching other parameters and we found out
-that it can even make target unreachable. But in fact we can prove next
+that it can even make the target unreachable. But we can prove the next
 sentence: if $\exists \hat{y} \in [0, y^*]: |s(\hat{y})|<v$ and
 $\forall y \in [0, y^*]: |s(y)| < \infty$, where $s:\mathbb{R} \to \mathbb{R}$
-is continuous, then boat can be reached. But it might be impossible with aiming
-method. Should be used other algorithm, which could be also optimal.
+is continuous, then the target can be reached. But it might be impossible with
+the aiming method. Another algorithm should be used, it also can be optimal.
 
-While researching this problem I got an idea about algorithm which could be used
-to provide reach and optimal control if mentioned conditions are true. I will
-try to prove this in next part.
+While researching this problem I got an idea about an algorithm that could be
+used to provide reach control if mentioned conditions are true. I will try to
+prove this in the next part.
 
 ## Reach condition proof
 
