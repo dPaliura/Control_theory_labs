@@ -32,10 +32,19 @@ define.legend.position <- function(xlim, ylim, pts){
 #             device. It is important, when program run from terminal.
 display.model <- function(model, run.X11=FALSE){
     nl <- '\n'
-    inp <- model$input
-    cat('\tInput\n')
-    print(inp)
+
+    stts <- model$states
+    days <- stts[,1]
+
+    cat('\tInput', nl)
+    print(model$input)
     if (run.X11) X11()
+
+    par(mfrow = c(2,2))
+    plot(days, stts[,2], type='l')
+    plot(days, stts[,3], type='l')
+    plot(days, stts[,4], type='l')
+    plot(days, stts[,5], type='l')
 }
 
 # Used after input get and before model built to indicate that program is
