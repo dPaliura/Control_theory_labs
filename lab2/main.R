@@ -71,6 +71,7 @@ main <- function(){
 
     run.X11 = ifelse(run$method=='terminal',T,F)
 
+    source(paste0(path, 'input_methods.R'), echo = FALSE)
     source(paste0(path, 'input.R'), echo = FALSE)
     source(paste0(path, 'model.R'), echo = FALSE)
     source(paste0(path, 'output.R'), echo = FALSE)
