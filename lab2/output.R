@@ -30,25 +30,28 @@ define.legend.position <- function(xlim, ylim, pts){
 #   model - value of function build.model
 #   run.X11 - logical, indicates whether it is need to open default R visual
 #             device. It is important, when program run from terminal.
-display.model <- function(model, run.X11=FALSE){
+display.model <- function(model){
     nl <- '\n'
 
-    stts <- model$states
-    days <- stts[,1]
+    states <- model$states
 
-    cat('\tInput', nl)
-    print(model$input)
-    if (run.X11) X11()
+    days <- states[,1]
 
-    par(mfrow = c(2,2))
-    plot(days, stts[,2], type='l')
-    plot(days, stts[,3], type='l')
-    plot(days, stts[,4], type='l')
-    plot(days, stts[,5], type='l')
+    xlim <- c(0, nrow(states))
+    ylim <- c(0, model$input$N)
+    col <- c('blue', 'red', 'purple', 'green', 'black')
+
+    plot(NA, xlim = xlim, ylim = ylim,
+         xlab = 'day', ylab='people')
+    for (i in 1:5){
+        lines(states[,1], states[,i+1], lwd = 2, col=col[i])
+    }
+
+    legend('topright',
+           legend = c('Susceptible', 'Infected (latent)', 'Infected (tested)',
+                      'Recovered', 'Dead'),
+           pch = NA, col = col, lwd = 2)
+
+
 }
 
-# Used after input get and before model built to indicate that program is
-# calculating.
-show.waiting <- function(){
-    cat('\n\nWait...\n\n')
-}
