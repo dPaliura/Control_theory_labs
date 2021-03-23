@@ -12,7 +12,7 @@
 #   it might be alpha + beta <= 1
 #   Control
 # u - function u(t) - number of vaccinated people per day
-build.model <- function(input.obj, days=3650){
+build.model <- function(input.obj, days=NULL){
     N  <- input.obj$N
 
     S <- N - (I <- input.obj$I0) - (R <- input.obj$R0) - (D <- input.obj$D0)
@@ -26,27 +26,37 @@ build.model <- function(input.obj, days=3650){
 
     p <- function(I) -log(1-c)*r*I/N
 
-    get.new.state <- function(state) c(
-        (state['day'] -> day) + 1,
-        (state['S'] -> S) - (S*p(I) -> S.p_I) - (S*u(day) -> S.u_t),
-        (state['I'] -> I) + S.p_I - (alpha*I -> alpha.I) - (beta*I -> beta.I),
-        (state['R'] -> R) + alpha.I + S.u_t,
-        (state['D'] -> D) + beta.I
-        )
+    init.state <-  c(S=S, I=I, R=R, D=D)
 
-    states <- rbind(tmp.state <- c(day=0, S=S, I=I, R=R, D=D))
-    if (is.null(days)) repeat{
-        states <- rbind(states,
-                        (tmp.state <- get.new.state(tmp.state)))
-        if (tmp.state['R'] + tmp.state['D'] == N) break
+    derivate <- function(t, y, parms){
+        return(list(c(
+            - ((S <- y['S']) * p((I <- y['I'])) -> SpI) - (S*u(t) -> Sut),
+            SpI - (alpha*I -> alphaI) - (beta*I -> betaI),
+            alphaI + Sut,
+            betaI
+        )))
     }
-    else for (day in 1:days){
-        states <- rbind(states,
-                        get.new.state(states[day,]))
+
+    sol <- if (is.null(days)) {
+        day <- 0
+        states <- c(0, init.state)
+        repeat {
+            cur.sol <- ode(init.state, seq(day, (day <- day+10)), derivate)
+            n <- nrow(cur.sol)
+            states <- rbind(states, cur.sol[-n,])
+            init.state <- cur.sol[n,-1]
+            if (init.state['S'] + init.state['I'] < 0.5) break
+        }
+        rbind(states, cur.sol[n,])
     }
-    return(list(
-        input = input.obj,
-        states = states))
+    else ode(init.state, seq(0, days), derivate)
+
+    sol[, 2:3] <- round(sol[, 2:3])
+    sol[, -(1:4)] <- floor(sol[, -(1:4)])
+    sol[, 4] <- N - rowSums(sol[, -c(1,4)])
+
+    plot(sol)
+    return(sol)
 }
 
 
