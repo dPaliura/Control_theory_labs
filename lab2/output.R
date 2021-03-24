@@ -30,7 +30,7 @@ define.legend.position <- function(xlim, ylim, pts){
 #   model - value of function build.model
 #   run.X11 - logical, indicates whether it is need to open default R visual
 #             device. It is important, when program run from terminal.
-display.model <- function(model){
+display.model <- function(model, main = '', legend=TRUE){
     nl <- '\n'
 
     states <- model$states
@@ -42,11 +42,13 @@ display.model <- function(model){
     col <- c('blue', 'red', 'purple', 'green', 'black')
 
     plot(NA, xlim = xlim, ylim = ylim,
+         main = main,
          xlab = 'day', ylab='people')
     for (i in 1:5){
         lines(states[,1], states[,i+1], lwd = 2, col=col[i])
     }
 
+    if (!legend) return()
     legend('topright',
            legend = c('Susceptible', 'Infected (latent)', 'Infected (tested)',
                       'Recovered', 'Dead'),

@@ -13,10 +13,11 @@
 #   Control
 # u - function u(t) - number of vaccinated people per day
 build.model <- function(input.obj, days=NULL){
+    require('deSolve')
     N  <- input.obj$N
 
-    S0 <- N - (I0 <- input.obj$I0) - (J0 <- input.obj$J0) -
-              (R0 <- input.obj$R0) - (D0 <- input.obj$D0)
+    init.state <-  c(S = N - input.obj$I0, I = input.obj$I0,
+                     J = 0, R = 0, D = 0)
 
     r  <- input.obj$r
     c  <- input.obj$c
@@ -32,7 +33,6 @@ build.model <- function(input.obj, days=NULL){
 
     p <- function(I) -log(1-c)*r*I/N
 
-    init.state <-  c(S=S0, I=I0, J=J0, R=R0, D=D0)
 
     derivate <- function(t, y, parms){
         return(list(c(
@@ -67,32 +67,3 @@ build.model <- function(input.obj, days=NULL){
         states = sol
     ))
 }
-
-
-inp <- list(
-    N = 5e5,
-
-    I0 = 1,
-    J0 = 0,
-    R0 = 0,
-    D0 = 0,
-
-    r = 1,
-    c = 0.2,
-
-    alpha = 1e-3,
-    beta = 2e-5,
-    a = 3e-3,
-    b = 1e-5,
-
-    # v is testing, u is vaccination
-    v = function(t) {
-        if (t > 0) {
-            if (t <= 180)  c(rep(0,30), 1:50,
-                            rep(49:40, each=2), rep(39:30, each=3),
-                            rep(29:25, each=4), rep(24:20, each=6))[t]/2e3
-            else 0.01
-        }
-        else 0
-    }
-)
