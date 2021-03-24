@@ -1,0 +1,87 @@
+---
+title: "Mathematical Modeling of Epidemics"
+author: "Daniel Paliura"
+date: "3/23/2021"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE)
+```
+
+```{r sourcing, include=FALSE}
+library('deSolve')
+
+source('model.R')
+source('output.R')
+```
+
+## Introduction
+
+This document was created as additional to 'Control Theory' subject second
+laboratory work 'Mathematical Modeling of Epidemics'. This document contains
+research for a dependence of input parameters on the problem solution. One of
+well-known models for modeling epidemics is SIRD (Susceptible, Infected,
+Recovered, Dead). All parameters will be set randomly in recommended intervals
+that are respective to COVID-19 pandemic. Also, SIRD model can be complicated
+with some special values.\
+
+I chose model with testing, so system described with additional value
+J - Justified (I guess, it could mean something other). Justified - people who
+tested with positive result, in other words, people with proved infection.
+And so I - Infected and latent people.\
+
+This work refers to the control theory a little, because model contains control
+parameters. It can be used to make research of pandemic change and also to try
+different controls or strategies.
+
+## Description of chosen SIRD model
+
+Model is based on differential equations system, that contains each variable
+change in time. SIRD with testing is described by following system:
+$$S(t)+I(t)+J(t)+R(t)+D(t) = N$$
+$$\frac{dS}{dt} = -Sp(I) - Su(t)$$
+$$\frac{dI}{dt} = Sp(I) - \alpha I - \beta I - Iv(t)$$
+$$\frac{dJ}{dt} = Iv(t) - aJ - bJ$$
+$$\frac{dR}{dt} = \alpha I + aJ + Su(t)$$
+$$\frac{dD}{dt} = \beta I + bJ$$
+with initial state $I(0)>0, S(0)=N-I(0)$, where\
+$N$ - number of people.\
+$S, I, J, R, D$ - number of Susceptible, Infected (latent), Infected (tested),\
+Recovered and Dead people at moment $t$.\
+$p(t)dt = p(I(t))dt$ - probability to infect while time $dt$.\
+$u(t) \in [0,1]$ - vaccinated part of people. Control variable,
+by default $u(t)\equiv0$.\
+$v(t) \in [0,1]$ - tested part of people at moment $t$. Control variable.\
+$\alpha$ - coefficient of recovery speed for latent infected.\
+$\beta$ - mortality coefficient for latent infected.\
+$a$ - coefficient of recovery speed for tested infected.\
+$b$ - mortality coefficient for tested infected.\
+
+Let $r$ is mean density of contacts for one person, $c$ - probability of
+infection in case of contact with infected. So $\frac{I}{N}$ - probability to
+meet infected. $\frac{rI}{N}dt$ - number of contacts with infected while time
+$dt$. $1-c$ - probability not to infect while contact with infected.
+$(1-c)^{\frac{rI}{N}dt}$ - probability not to infect while time $dt$. So
+probability to infect while time $dt$ is:
+$$1 - (1-c)^{\frac{rI}{N}dt} = 1 - \exp(\frac{r\log(1-c)I}{N}dt)
+\approx 1-(1+\frac{r\log(1-c)I}{N}dt) = -\frac{r\log(1-c)I}{N}dt$$
+So $p(t) = p(I(t)) = -\frac{rI\log(1-c)}{N}$.
+
+To create model of epidemic flow, it is need to solve differential equations
+system with numeric method. To do so I used R package ```deSolve```, function 
+```ode(y, times, func, parms, ...)```. Also, got values are decimals, which is
+not correct to represent people, so I rounded $S, I$, floored $R, D$ and got
+$J = N-(S+I+R+D)$.
+
+As model parameters will be taken:
+* $N$ - number of people
+* $I_0$ - number of infected people at moment $t=0$, $0<I_0<N$
+* $r$ - mean number of contacts per day for a single person
+* $c$ - probability of infection for single contact with infected
+* $\alpha$ - probability to recover while one day for a single latent infected 
+* $\beta$ - probability to die while one day for a single latent infected
+* $a$ - probability to recover while one day for a single tested infected
+* $b$ - probability to die while one day for a single tested infected
+
