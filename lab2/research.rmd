@@ -85,3 +85,68 @@ As model parameters will be taken:
 * $a$ - probability to recover while one day for a single tested infected
 * $b$ - probability to die while one day for a single tested infected
 
+## Research of influence of model parameters
+
+To do research I will variate each parameter with fixed others. As default
+values I will set randomly uniform in recommended intervals:\
+$N \in [10^3, 10^6], r \in [0.001, 50], c \in [0.5, 0.9]$\
+$\alpha \in [0.05, 0.1], \beta \in [0.01, 0.1]$\
+$a \in [\alpha, 0.1], b \in [0.01, \beta]$.\
+testing part function $v(t)$ will be as it was in real experience, something
+like cumulative function of normal distribution (first 20 days no tests, then
+testing speed increasing fast and again decreasing).
+
+```{r set default input, echo=TRUE}
+set.seed(32)
+
+input <- list(
+    N = round(runif(1, 1e3, 1e6)),
+    I0 = 1,
+    r = 10^runif(1, log(0.001, 10), log(50,10)),
+    c = runif(1, 0.5, 0.9),
+    alpha = (runif(1, 0.05, 0.1) -> alpha),
+    beta = (runif(1, 0.01, 0.1) -> beta),
+    a = runif(1, alpha, 0.1),
+    b = runif(1, 0.01, beta)
+)
+
+input <- lapply(input, round, 4)
+
+print(input)
+
+input$v = function(t) ifelse(test = t>20,
+                             yes = 0.7*pnorm(t, 150, 100),
+                             no = 0)
+```
+
+Built model represented on plot:
+
+```{r default model build and plot}
+model <- build.model(input, 100)
+display.model(model, 'Model with default parameters')
+```
+
+Looks controversial...
+
+#### Number of people\
+
+```{r N variate plots}
+par(mfrow=c(2,1))
+par(mar = c(2,4,2,2))
+
+input.tmp <- input
+
+N <- 10^(3:6)
+for (n in N){
+    input.tmp$N <- n
+    model <- build.model(input.tmp, 40)
+    display.model(model, paste0('N = ', n), legend = FALSE)
+}
+```
+
+All plots are almost similar, so $N$ affects weakly on epidemic flow. There is
+small shift: $I$ tops are at $t\approx10$ for $N=1e3$ and at $t\approx17$ for
+$N=1e6$, so the difference is scanty considering $N$ change.\
+I conclude: $N$ affects speed of infection spread not significantly.
+
+
