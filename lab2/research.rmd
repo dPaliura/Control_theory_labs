@@ -17,29 +17,41 @@ source('model.R')
 source('output.R')
 ```
 
+#### Contents
+
+* [Introduction](#introduction)
+* [Description of chosen SIRD model](#description-of-chosen-sird-model)
+* [Research of influence of model parameters](#research-of-influence-of-model-parameters)
+    + [Number of people](#number-of-people)
+    + [Number of contacts per day](#number-of-contacts-per-day)
+    + [Probability of infection](#probability-of-infection)
+    + [Recovery and death probabilities](#recovery-and-death-probabilities)
+* [Vaccination control research](#vaccination-control-research)
+* [My opinion](#my-opinion)
+
 ## Introduction
 
-This document was created as additional to 'Control Theory' subject second
+This document was created in addition to 'Control Theory' subject second
 laboratory work 'Mathematical Modeling of Epidemics'. This document contains
-research for a dependence of input parameters on the problem solution. One of
-well-known models for modeling epidemics is SIRD (Susceptible, Infected,
+research for a dependence of input parameters on the problem solution. One of 
+the well-known models for modeling epidemics is SIRD (Susceptible, Infected,
 Recovered, Dead). All parameters will be set randomly in recommended intervals
-that are respective to COVID-19 pandemic. Also, SIRD model can be complicated
-with some special values.\
+that are respective to the COVID-19 pandemic. Also, the SIRD model can be
+complicated with some special values.\
 
-I chose model with testing, so system described with additional value
+I chose the model with testing, so the system is described with additional value
 J - Justified (I guess, it could mean something other). Justified - people who
-tested with positive result, in other words, people with proved infection.
+tested with a positive result, in other words, people with proved infection.
 And so I - Infected and latent people.\
 
-This work refers to the control theory a little, because model contains control
-parameters. It can be used to make research of pandemic change and also to try
-different controls or strategies.
+This work refers to the control theory a little because the model contains
+control parameters. It can be used to make research of pandemic change and also
+to try different controls or strategies.
 
 ## Description of chosen SIRD model
 
 Model is based on differential equations system, that contains each variable
-change in time. SIRD with testing is described by following system:
+change in time. SIRD with testing is described by the following system:
 $$S(t)+I(t)+J(t)+R(t)+D(t) = N$$
 $$\frac{dS}{dt} = -Sp(I) - Su(t)$$
 $$\frac{dI}{dt} = Sp(I) - \alpha I - \beta I - Iv(t)$$
@@ -47,16 +59,16 @@ $$\frac{dJ}{dt} = Iv(t) - aJ - bJ$$
 $$\frac{dR}{dt} = \alpha I + aJ + Su(t)$$
 $$\frac{dD}{dt} = \beta I + bJ$$
 with initial state $I(0)>0, S(0)=N-I(0)$, where\
-$N$ - number of people.\
-$S, I, J, R, D$ - number of Susceptible, Infected (latent), Infected (tested),\
-Recovered and Dead people at moment $t$.\
-$p(t)dt = p(I(t))dt$ - probability to infect while time $dt$.\
+$N$ - number of people;\
+$S, I, J, R, D$ - number of Susceptible, Infected (latent), Infected (tested),
+Recovered and Dead people at moment $t$;\
+$p(t)dt = p(I(t))dt$ - probability to infect while time $dt$;\
 $u(t) \in [0,1]$ - vaccinated part of people. Control variable,
-by default $u(t)\equiv0$.\
-$v(t) \in [0,1]$ - tested part of people at moment $t$. Control variable.\
-$\alpha$ - coefficient of recovery speed for latent infected.\
-$\beta$ - mortality coefficient for latent infected.\
-$a$ - coefficient of recovery speed for tested infected.\
+by default $u(t)\equiv0$;\
+$v(t) \in [0,1]$ - tested part of people at the moment $t$. Control variable;\
+$\alpha$ - coefficient of recovery speed for latent infected;\
+$\beta$ - mortality coefficient for latent infected;\
+$a$ - coefficient of recovery speed for tested infected;\
 $b$ - mortality coefficient for tested infected.\
 
 Let $r$ is mean density of contacts for one person, $c$ - probability of
@@ -69,13 +81,14 @@ $$1 - (1-c)^{\frac{rI}{N}dt} = 1 - \exp(\frac{r\log(1-c)I}{N}dt)
 \approx 1-(1+\frac{r\log(1-c)I}{N}dt) = -\frac{r\log(1-c)I}{N}dt$$
 So $p(t) = p(I(t)) = -\frac{rI\log(1-c)}{N}$.
 
-To create model of epidemic flow, it is need to solve differential equations
-system with numeric method. To do so I used R package ```deSolve```, function 
-```ode(y, times, func, parms, ...)```. Also, got values are decimals, which is
-not correct to represent people, so I rounded $S, I$, floored $R, D$ and got
-$J = N-(S+I+R+D)$.
+To create a model of epidemic flow, there is a need to solve differential 
+equations system with a numeric method. To do so I used R package ```deSolve```,
+function  ```ode(y, times, func, parms, ...)```. Also, got values are decimals,
+which is not correct to represent people, so I rounded $S, I$, floored $R, D$
+and got $J = N-(S+I+R+D)$.
 
 As model parameters will be taken:
+
 * $N$ - number of people
 * $I_0$ - number of infected people at moment $t=0$, $0<I_0<N$
 * $r$ - mean number of contacts per day for a single person
@@ -87,14 +100,14 @@ As model parameters will be taken:
 
 ## Research of influence of model parameters
 
-To do research I will variate each parameter with fixed others. As default
-values I will set randomly uniform in recommended intervals:\
+To do research I will variate each parameter with fixed others. I will set
+uniform random values in recommended intervals as default:\
 $N \in [10^3, 10^6], r \in [0.001, 50], c \in [0.4, 0.9]$\
 $\alpha \in [0.05, 0.1], \beta \in [0.01, 0.1]$\
 $a \in [\alpha, 0.1], b \in [0.01, \beta]$.\
-testing part function $v(t)$ will be as it was in real experience, something
-like cumulative function of normal distribution (first 20 days no tests, then
-testing speed increasing fast and again decreasing).
+Testing part function $v(t)$ will be as it was in real experience, something
+like the cumulative function of normal distribution (first 20 days no tests,
+then testing speed increasing fast and again decreasing).
 
 ```{r set default input, echo=TRUE}
 set.seed(32)
@@ -119,7 +132,7 @@ input$v = function(t) ifelse(test = t>20,
                              no = 0)
 ```
 
-Built model represented on plot:
+The built model is represented on the plot:
 
 ```{r default model build and plot}
 model <- build.model(input)
@@ -130,7 +143,7 @@ Looks controversial...
 
 #### Number of people\
 
-```{r N variate plots, fig.height=9}
+```{r N variate plots, fig.height=8}
 par(mfrow=c(4,1))
 par(mar = c(2,4,2,2))
 
@@ -144,10 +157,10 @@ for (n in N){
 }
 ```
 
-All plots are almost similar, so $N$ affects weakly on epidemic flow. There is
-small shift: $I$ tops are at $t\approx10$ for $N=1e3$ and at $t\approx17$ for
+All plots are almost similar, so $N$ affects weakly on epidemic flow. There is a
+small shift: $I$ tops are at $t\approx10$ for $N=1e3$ and $t\approx17$ for
 $N=1e6$, so the difference is scanty considering $N$ change.\
-I conclude: $N$ affects speed of infection spread not significantly.
+I conclude: **$N$ affects the speed of infection spread not significantly**.
 
 #### Number of contacts per day\
 
@@ -165,21 +178,21 @@ for (value in r){
 }
 ```
 
-Those plots show weak sides of model. First of all: we see no infection spread
-for $r \le 0.1$, it might be because single infected person died before 
-infecting someone other. This situation is very controversial. Also a lack of
-states is observed, because, for example, COVID-19 has long incubation term,
-while which people can infect others but not described as infected. And also, I
-think intervals for parameters are given badly, because infection spreads very
-fast in each example and also people beggin to die from the first day of
-infection. In my opinion it isn't correct to say about probabilities to recover
-or die ($\alpha, \beta, a, b$), when those probabilities used in determined 
-model. I think word 'probability' not compatible with determined models.
-OK, also, we see that 
-**increase of $r$ parameter leads to faster infection spread**.
-But limit distribustion of Recovered and Dead almost the same, because
+Those plots show weak sides of the model. First of all: we see no infection
+spread for $r \le 0.1$, it might be because the single infected person died
+before  infecting someone other. This situation is very controversial. Also, a
+lack of states is observed, because, for example, COVID-19 has a long incubation
+term, while people can infect others but are not described as infected. And
+also, I think intervals for parameters are given badly because the infection
+spreads very fast in each example and also people begin to die from the first
+day of infection. In my opinion, it isn't correct to say about probabilities to
+recover or die ($\alpha, \beta, a, b$), when those probabilities are used in
+determined the model. I think the word 'probability' is not compatible with
+determined models. OK, also, we see that 
+**increase of the $r$ parameter leads to faster infection spread**.
+But limit distribution of Recovered and Dead almost the same, because
 it's very few tested infected (testing starts too late). For $r=50$ there is
-situation, that almost all people are infected at second day.
+the situation that almost all people are infected on the second day.
 **Contacts intensity highly affects on begin of infection spread**.
 
 #### Probability of infection\
@@ -197,27 +210,27 @@ for (value in c){
     display.model(model, paste0('c = ', value), legend = FALSE)
 }
 ```
-Very interesting. There is such an interesting situation: if probability is
+Very interesting. There is such an interesting situation: if the probability is
 small, then there are non-zero rest if Susceptible people. I guess it's because
-of testing: testing occupies latent Infected people before all Suceptible become
-Infected, and it can be proved: on plots with $c \ge 0.7$ testing beggins too
-late - when almost all Susceptibles become Infected. In other cases testing
-beggins when Infection spread is not such rapid and does not occupy almost all
-people. So according to this models, I conclude: 
+of testing: testing occupies latent Infected people before all Susceptible
+become Infected, and it can be proved: on plots with $c \ge 0.7$ the testing
+begins too late - when almost all Susceptibles become Infected. In other cases,
+testing begins when Infection spread is not such rapid and does not occupy
+almost all people. So according to these models, I conclude: 
 **if testing exists and it is begun on time, it's available to stop infection**
 **spread until all people infected in case infection probability is low**.
-But there is an issue: it is not realistic, just demonstrative. And who know is
-it better to recover for all people, or to stop infection. Probably we can
-choose strategy depending on this value. If infection is low contagious, then it
-should be isolated, because it is available, like for papilloma or AIDS. But I
-mentioned sexually transmitted viruses. What about airborne droplet? I think
-there is no ways to stop it, because we have to make people not to breath.
-For COVID-19 we have what we have, it has occupied whole Earth.
+But there is an issue: it is not realistic, just demonstrative. And who knows
+whether it's better to recover all people, or to stop infection. Probably we can
+choose the strategy depending on this value. If the infection is low contagious,
+then it should be isolated, because it's available, like for papilloma or AIDS.
+But I mentioned sexually transmitted viruses. What about airborne droplets? I
+think there are no ways to stop it because we have to make people not breathe.
+For COVID-19 we have what we have, it has occupied the whole Earth.
 
-#### Recovery and death probabilities
+#### Recovery and death probabilities\
 
-I will compare equal sets of $\alpha$-s and $\beta$-s to get more understandable
-picture. I will also set $a=\alpha, b=\beta$.
+I will compare equal sets of $\alpha$-s and $\beta$-s to get a more
+understandable picture. I will also set $a=\alpha, b=\beta$.
 
 ```{r alpha and beta variate plots}
 input.tmp <- input
@@ -248,13 +261,13 @@ for (value1 in alpha){
 }
 ```
 
-All plots looks similar, but there are tiny differences. Let's look on diagonal
-set of plots. We see equal distributions of Recovered and Dead but different
-forms of lines. And on last plot there is very little rest of Susceptible.
-Distributions of Recovered and Dead obey to $\frac{\alpha}{\beta}$ rate but, I
-noticed that height of Infected and hence Tested tops are different and they are
-less when $\alpha+\beta$ greater and, also, lines becomes straight earlier.
-I conclude: 
+All plots look similar, but there are tiny differences. Let's look at the
+diagonal set of plots. We see equal distributions of Recovered and Dead but
+different forms of lines. And on the last plot, there is very little rest of
+Susceptible. Distributions of Recovered and Dead obey to $\frac{\alpha}{\beta}$
+rate but, I noticed that height of Infected and hence Tested tops are different
+and they are less when $\alpha+\beta$ greater and, also, lines becomes straight
+earlier. I conclude: 
 **if testing works nice and $a, b$ are better than $\alpha, \beta$, then there**
 **is a sense to provide more testing (but we have to remember that hospitals**
 **are not dimensionless)**.\
@@ -297,8 +310,8 @@ display.model(model,
               legend = FALSE)
 ```
 
-First pair of plots is very demonstrative about how can testing affect death
-volume. Second pair of plots example shows simple idea:
+The first pair of plots is very demonstrative about how can testing affect death
+volume. The second pair of plots example shows a simple idea:
 **Testing is more sensible as sooner it begins**.
 
 ## Vaccination control research
@@ -351,27 +364,27 @@ row.names(M) <- c('T', 'max')
 print(M)
 ```
 
-There is valuable difference only in last case, but is it available to make 
-5000 vaccinations per day in half-million city? It's about 1% per a day. I guess
-it's about maximum, because it can be lack of staff to make such a number of
-vaccinations per day. Only last example shows notable changes on plot. Numbers
-differs for each case, but not such significant for first and second cases as
-for second and third ones. I think that human's life invaluable and it's only
-the reason to vaccinate. Also I think that it make sense to vaccinate on
-epidemic very beginning to provide maximum of Recovered people and hence minimum
-of Infected so prevent many deaths.
+There is a valuable difference only in the last case, but is it available to
+make  5000 vaccinations per day in a half-million city? It's about 1% per day.
+I guess it's about maximum because it can be a lack of staff to make such many
+vaccinations per day. Only the last example shows notable changes in the plot.
+Numbers differ for each case, but not such significant for first and second
+cases as for second and third ones. I believe that human life is priceless and 
+it is only the reason to vaccinate. Also, I think it makes sense to vaccinate on
+epidemic's very beginning to provide a maximum of Recovered people and hence a
+minimum of Infected to prevent many deaths.
 
 ## My opinion
 
-I think that this model is good for fast inaccurate modeling, but not sufficient
-to make some good realistic models, because this method gives determined model.
-I think such a process like epidemic can't be determined, it has to be
+I think this method is good for the fast inaccurate modeling, but not sufficient
+to make some good realistic model, because this method gives a determined model.
+I think such a process like an epidemic can't be determined, it has to be
 stochastic. I guess it would be better to make something much complicated (even
-complex to formulate) but stochastic and to use Monte-Carlo method.
+complex to formulate) but stochastic. And use the Monte-Carlo method.
 I tried to imagine what I would do if I would make my own model. Probably, it 
-would be nice to keep number of Healthy (not infected), Infected (can be latent
-and tested), Recovered and Immunized (aren't equal) and Dead too.
-But model has to be complicated with such parameters as:
+would be nice to keep numbers of Healthy (not infected), Infected (can be latent
+and tested), Recovered and Immunized (aren't equal), and Dead too.
+But the model has to be complicated with such parameters as:
 
 * Incubation period mean duration
 * Malady mean duration
@@ -383,9 +396,10 @@ But model has to be complicated with such parameters as:
 * Probabilities to acquire immunity after recovery
 * And others...
 
-I imagine it like a number of capacities where can be people. Like in Markov
-chain, each person is in some group (Healthy/Infected/Dead...) but as it's hard
-to process each person by Markov chain. So I propose to move random amounts of
-people from each state (except Dead and Immunized) like in Markov chain but with
-consideration of mentioned parameters. For example, high severity brings high
-death or higher mean recovery times decreases probability to infect again.
+I imagine it like several capacities where can be people. Like in the Markov
+chain, each person is in some group (Healthy/Infected/Dead...) but it's hard
+to process each person with the Markov chain. So I propose to move random
+amounts of people from each state (except Dead and Immunized) like in the Markov
+chain but with consideration of mentioned parameters. For example, high severity
+brings high death or higher mean recovery times decreases the probability to
+infect again.
