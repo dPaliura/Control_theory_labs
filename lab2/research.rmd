@@ -130,8 +130,8 @@ Looks controversial...
 
 #### Number of people\
 
-```{r N variate plots}
-par(mfrow=c(2,1))
+```{r N variate plots, fig.height=9}
+par(mfrow=c(4,1))
 par(mar = c(2,4,2,2))
 
 input.tmp <- input
@@ -299,8 +299,93 @@ display.model(model,
 
 First pair of plots is very demonstrative about how can testing affect death
 volume. Second pair of plots example shows simple idea:
-**Testing is sensible as soon as possible**.
+**Testing is more sensible as sooner it begins**.
+
+## Vaccination control research
+
+Let try next vaccination controls: $u(t)=500/N$ and $u(t)=5000/N$ (500 and 5000
+persons per day).
 
 
+```{r}
+par(mfrow=c(3,1))
+par(mar = c(2,4,2,2))
+
+input.tmp <- input
 
 
+model1 <- build.model(input.tmp, 180)
+display.model(model1,
+              'u(t) = 0',
+              legend=FALSE)
+
+input.tmp$u <- function(t) 500/input$N
+model2 <- build.model(input.tmp, 180)
+display.model(model2,
+              'u(t) = 500/N',
+              legend=FALSE)
+
+input.tmp$u <- function(t) 5000/input$N
+model3 <- build.model(input.tmp, 180)
+display.model(model3,
+              'u(t) = 5000/N',
+              legend=FALSE)
+
+
+cat('u(t) = 0:\n')
+M <- rbind(model1$states[nrow(model1$states),2:6],
+           lapply(2:6, function(j) max(model1$states[,j])))
+row.names(M) <- c('T', 'max')
+print(M)
+
+cat('u(t) = 500/N:\n')
+M <- rbind(model2$states[nrow(model2$states),2:6],
+           lapply(2:6, function(j) max(model2$states[,j])))
+row.names(M) <- c('T', 'max')
+print(M)
+
+cat('u(t) = 5000/N:\n')
+M <- rbind(model3$states[nrow(model3$states),2:6],
+           lapply(2:6, function(j) max(model3$states[,j])))
+row.names(M) <- c('T', 'max')
+print(M)
+```
+
+There is valuable difference only in last case, but is it available to make 
+5000 vaccinations per day in half-million city? It's about 1% per a day. I guess
+it's about maximum, because it can be lack of staff to make such a number of
+vaccinations per day. Only last example shows notable changes on plot. Numbers
+differs for each case, but not such significant for first and second cases as
+for second and third ones. I think that human's life invaluable and it's only
+the reason to vaccinate. Also I think that it make sense to vaccinate on
+epidemic very beginning to provide maximum of Recovered people and hence minimum
+of Infected so prevent many deaths.
+
+## My opinion
+
+I think that this model is good for fast inaccurate modeling, but not sufficient
+to make some good realistic models, because this method gives determined model.
+I think such a process like epidemic can't be determined, it has to be
+stochastic. I guess it would be better to make something much complicated (even
+complex to formulate) but stochastic and to use Monte-Carlo method.
+I tried to imagine what I would do if I would make my own model. Probably, it 
+would be nice to keep number of Healthy (not infected), Infected (can be latent
+and tested), Recovered and Immunized (aren't equal) and Dead too.
+But model has to be complicated with such parameters as:
+
+* Incubation period mean duration
+* Malady mean duration
+* Quarantine properties (less contacts and probability of infection)
+* Mean severity at the moment
+* Severity deviation
+* Social activity of people at weekdays and weekends
+* Mean recovery times
+* Probabilities to acquire immunity after recovery
+* And others...
+
+I imagine it like a number of capacities where can be people. Like in Markov
+chain, each person is in some group (Healthy/Infected/Dead...) but as it's hard
+to process each person by Markov chain. So I propose to move random amounts of
+people from each state (except Dead and Immunized) like in Markov chain but with
+consideration of mentioned parameters. For example, high severity brings high
+death or higher mean recovery times decreases probability to infect again.
