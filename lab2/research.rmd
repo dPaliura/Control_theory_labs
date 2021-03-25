@@ -89,7 +89,7 @@ As model parameters will be taken:
 
 To do research I will variate each parameter with fixed others. As default
 values I will set randomly uniform in recommended intervals:\
-$N \in [10^3, 10^6], r \in [0.001, 50], c \in [0.5, 0.9]$\
+$N \in [10^3, 10^6], r \in [0.001, 50], c \in [0.4, 0.9]$\
 $\alpha \in [0.05, 0.1], \beta \in [0.01, 0.1]$\
 $a \in [\alpha, 0.1], b \in [0.01, \beta]$.\
 testing part function $v(t)$ will be as it was in real experience, something
@@ -103,7 +103,7 @@ input <- list(
     N = round(runif(1, 1e3, 1e6)),
     I0 = 1,
     r = 10^runif(1, log(0.001, 10), log(50,10)),
-    c = runif(1, 0.5, 0.9),
+    c = runif(1, 0.4, 0.9),
     alpha = (runif(1, 0.05, 0.1) -> alpha),
     beta = (runif(1, 0.01, 0.1) -> beta),
     a = runif(1, alpha, 0.1),
@@ -122,8 +122,8 @@ input$v = function(t) ifelse(test = t>20,
 Built model represented on plot:
 
 ```{r default model build and plot}
-model <- build.model(input, 100)
-display.model(model, 'Model with default parameters')
+model <- build.model(input)
+display.model(model, 'Model with default parameters until end')
 ```
 
 Looks controversial...
@@ -148,5 +148,159 @@ All plots are almost similar, so $N$ affects weakly on epidemic flow. There is
 small shift: $I$ tops are at $t\approx10$ for $N=1e3$ and at $t\approx17$ for
 $N=1e6$, so the difference is scanty considering $N$ change.\
 I conclude: $N$ affects speed of infection spread not significantly.
+
+#### Number of contacts per day\
+
+```{r r variate plots}
+input.tmp <- input
+
+par(mfrow=c(3,2))
+par(mar = c(2,4,2,2))
+
+r <- c(.001, .01, .1, 1, 5, 50)
+for (value in r){
+    input.tmp$r <- value
+    model <- build.model(input.tmp, 50)
+    display.model(model, paste0('r = ', value), legend = FALSE)
+}
+```
+
+Those plots show weak sides of model. First of all: we see no infection spread
+for $r \le 0.1$, it might be because single infected person died before 
+infecting someone other. This situation is very controversial. Also a lack of
+states is observed, because, for example, COVID-19 has long incubation term,
+while which people can infect others but not described as infected. And also, I
+think intervals for parameters are given badly, because infection spreads very
+fast in each example and also people beggin to die from the first day of
+infection. In my opinion it isn't correct to say about probabilities to recover
+or die ($\alpha, \beta, a, b$), when those probabilities used in determined 
+model. I think word 'probability' not compatible with determined models.
+OK, also, we see that 
+**increase of $r$ parameter leads to faster infection spread**.
+But limit distribustion of Recovered and Dead almost the same, because
+it's very few tested infected (testing starts too late). For $r=50$ there is
+situation, that almost all people are infected at second day.
+**Contacts intensity highly affects on begin of infection spread**.
+
+#### Probability of infection\
+
+```{r c variate plots}
+input.tmp <- input
+
+par(mfrow=c(3,2))
+par(mar = c(2,4,2,2))
+
+c <- c(.4, .5, .6, .7, .8, .9)
+for (value in c){
+    input.tmp$c <- value
+    model <- build.model(input.tmp, 150)
+    display.model(model, paste0('c = ', value), legend = FALSE)
+}
+```
+Very interesting. There is such an interesting situation: if probability is
+small, then there are non-zero rest if Susceptible people. I guess it's because
+of testing: testing occupies latent Infected people before all Suceptible become
+Infected, and it can be proved: on plots with $c \ge 0.7$ testing beggins too
+late - when almost all Susceptibles become Infected. In other cases testing
+beggins when Infection spread is not such rapid and does not occupy almost all
+people. So according to this models, I conclude: 
+**if testing exists and it is begun on time, it's available to stop infection**
+**spread until all people infected in case infection probability is low**.
+But there is an issue: it is not realistic, just demonstrative. And who know is
+it better to recover for all people, or to stop infection. Probably we can
+choose strategy depending on this value. If infection is low contagious, then it
+should be isolated, because it is available, like for papilloma or AIDS. But I
+mentioned sexually transmitted viruses. What about airborne droplet? I think
+there is no ways to stop it, because we have to make people not to breath.
+For COVID-19 we have what we have, it has occupied whole Earth.
+
+#### Recovery and death probabilities
+
+I will compare equal sets of $\alpha$-s and $\beta$-s to get more understandable
+picture. I will also set $a=\alpha, b=\beta$.
+
+```{r alpha and beta variate plots}
+input.tmp <- input
+
+par(mfrow=c(3,3))
+par(mar = c(2,4,2,2))
+
+alpha <- c(.01, .05, .1)
+beta <- c(.01, .05, .1)
+for (value1 in alpha){
+    for (value2 in beta){
+        input.tmp$alpha <- value1 -> input.tmp$a
+        input.tmp$beta  <- value2 -> input.tmp$b
+        model <- build.model(input.tmp, 100)
+        
+        main <- parse(text = paste0("paste(alpha, ",
+                                    paste0("' = ", value1, ", ', "),
+                                    "beta, ",
+                                    paste0("' = ", value2, ", ', "),
+                                    "alpha, '/', beta, ",
+                                    paste0("' = ", value1/value2, "'"),
+                                    ")"))
+        
+        display.model(model, 
+                      main, 
+                      legend = FALSE)
+    }
+}
+```
+
+All plots looks similar, but there are tiny differences. Let's look on diagonal
+set of plots. We see equal distributions of Recovered and Dead but different
+forms of lines. And on last plot there is very little rest of Susceptible.
+Distributions of Recovered and Dead obey to $\frac{\alpha}{\beta}$ rate but, I
+noticed that height of Infected and hence Tested tops are different and they are
+less when $\alpha+\beta$ greater and, also, lines becomes straight earlier.
+I conclude: 
+**if testing works nice and $a, b$ are better than $\alpha, \beta$, then there**
+**is a sense to provide more testing (but we have to remember that hospitals**
+**are not dimensionless)**.\
+To prove this conclusion I shall demonstrate this. So let's see plots,
+where $\alpha \in \{0.01, 0.05\}, \beta = 0.01$ and 
+$a \in \{\alpha, 4\alpha\}, b \in \{\frac{\beta}{4}, \beta\}$,
+
+```{r a and b variate plots}
+input.tmp <- input
+
+par(mfrow=c(2,2))
+par(mar = c(2,4,2,2))
+
+input.tmp$alpha <- 0.01 -> input.tmp$a
+input.tmp$beta <- 0.01 -> input.tmp$b
+model <- build.model(input.tmp, 200)
+display.model(model, 
+              expression(paste('a = ', alpha, ' = 0.01, b = ', beta,' = 0.01')), 
+              legend = FALSE)
+
+input.tmp$a <- 0.04
+input.tmp$b <- 0.0025
+model <- build.model(input.tmp, 200)
+display.model(model, 
+              expression(paste('a = 4',alpha,' = 0.04, b = ',beta,'/4 = 0.0025')), 
+              legend = FALSE)
+
+input.tmp$alpha <- 0.05 -> input.tmp$a
+input.tmp$beta <- 0.01 -> input.tmp$b
+model <- build.model(input.tmp, 200)
+display.model(model, 
+              expression(paste('a = ', alpha, ' = 0.05, b = ', beta,' = 0.01')), 
+              legend = FALSE)
+
+input.tmp$a <- 0.2
+input.tmp$b <- 0.0025
+model <- build.model(input.tmp, 200)
+display.model(model, 
+              expression(paste('a = 4',alpha,' = 0.2, b = ',beta,'/4 = 0.0025')), 
+              legend = FALSE)
+```
+
+First pair of plots is very demonstrative about how can testing affect death
+volume. Second pair of plots example shows simple idea:
+**Testing is sensible as soon as possible**.
+
+
 
 
