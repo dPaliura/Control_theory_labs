@@ -48,12 +48,11 @@ display.model <- function(model, main = '', legend=TRUE){
         lines(states[,1], states[,i+1], lwd = 2, col=col[i])
     }
 
-    if (!legend) return()
-    legend('topright',
-           legend = c('Susceptible', 'Infected (latent)', 'Infected (tested)',
-                      'Recovered', 'Dead'),
-           pch = NA, col = col, lwd = 2)
-
-
+    if (legend){
+        legend('topright',
+               legend = c('Susceptible','Infected (latent)','Infected (tested)',
+                          'Recovered', 'Dead'),
+               pch = NA, col = col, lwd = 2)
+    }
 }
 

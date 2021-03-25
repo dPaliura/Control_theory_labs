@@ -47,12 +47,17 @@ build.model <- function(input.obj, days=NULL){
     sol <- if (is.null(days)) {
         day <- 0
         states <- NULL
+        penalty <- 0
         repeat {
             cur.sol <- ode(init.state, seq(day, (day <- day+10)), derivate)
             n <- nrow(cur.sol)
             states <- rbind(states, cur.sol[-n,])
             init.state <- cur.sol[n,-1]
             if (init.state['S'] + init.state['I'] + init.state['J'] < 0.5) break
+            if (sd(cur.sol[n,-1]-init.state) < 1e-3) {
+                if (penalty > 4) break
+                else penalty <- penalty+1
+            }
         }
         rbind(states, cur.sol[n,])
     }
