@@ -34,17 +34,17 @@ var.prb <- function(I, t0, t1, x0, x1, N=50, lambda = NULL,
         N = 50,
         lambda = lambda,
         method = method,
-        times = times, X = opt$par,
-        value = opt$value,
-        counts = opt$counts
+        times = times,
+        opt = opt
     )
     class(res) <- 'VariationProblemSolution'
     return(res)
+    print(opt)
 }
 
 
 plot.VariationProblemSolution <- function(obj, ...){
-    plot(obj$times, c(obj$x0, obj$X, obj$x1),
+    plot(obj$times, c(obj$x0, obj$opt$par, obj$x1),
          type = 'l',
          xlab = 'time', ylab = 'x',
          ...)
@@ -63,10 +63,10 @@ summary.VariationProblemSolution <- function(obj){
                yes = paste('Regularized with lambda =', obj$lambda),
                no ='Regularization wasn\'t used'), nl,
         'Optimized via optim(par, fn, ...) with method=', obj$method, nl,
-        'Got J optimal value ', obj$value, nl,
-        'While optimiation called J ', obj$counts[1], ' times ',
-        'and its gradient ', ifelse(is.na(obj$counts[2]),
+        'Got J optimal value ', obj$opt$value, nl,
+        'While optimiation called J ', obj$opt$counts[1], ' times ',
+        'and its gradient ', ifelse(is.na(obj$opt$counts[2]),
                                 'wasn\'t counted',
-                                paste(obj$counts[2],'times')), '.', nl,
+                                paste(obj$opt$counts[2],'times')), '.', nl,
         sep='')
 }
