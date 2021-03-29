@@ -6,6 +6,9 @@
 # N - Number of intervals for splitting the time interval [t1, t2].
 # lambda - regularization parameter. If not NULL, then problem solved
 #          as regularized with value lambda >= 0
+# method - optimization method passed to optim() function as cognominal argument
+# ... - other arguments passed to optim() function,
+#       for example, control=list(trace=3)
 var.prb <- function(I, t0, t1, x0, x1, N=50, lambda = NULL,
                     ...,
                     method = 'BFGS'){
@@ -62,10 +65,10 @@ summary.VariationProblemSolution <- function(obj){
         ifelse(test = !is.null(obj$lambda),
                yes = paste('Regularized with lambda =', obj$lambda),
                no ='Regularization wasn\'t used'), nl,
-        'Optimized via optim(par, fn, ...) with method=', obj$method, nl,
+        'Optimized via optim(par, fn, ...) with method=\'', obj$method, "'", nl,
         'Got J optimal value ', obj$opt$value, nl,
-        'While optimiation called J ', obj$opt$counts[1], ' times ',
-        'and its gradient ', ifelse(is.na(obj$opt$counts[2]),
+        'While optimization evaluated J - ', obj$opt$counts[1], ' times ',
+        'and its gradient - ', ifelse(is.na(obj$opt$counts[2]),
                                 'wasn\'t counted',
                                 paste(obj$opt$counts[2],'times')), '.', nl,
         sep='')
