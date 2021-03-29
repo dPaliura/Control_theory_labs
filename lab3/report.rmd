@@ -29,12 +29,12 @@ source('model.R', echo = FALSE)
 This document was created in addition to 'Control Theory' subject third
 laboratory work 'Numerical Solution of a Variation Problem'. This document on
 GitHub is [here](https://github.com/dPaliura/Control_theory_labs/blob/main/lab3/report.pdf).
-It contains performance of the task according to variant.
+It contains the performance of the task according to variant.
 
 ## Problem Formulation
 
-Variation Problem is optimization problem with infinite dimensions in set of
-continuous differentiated functions with fixed bounds.
+Variation Problem is an optimization problem with infinite dimensions in the set
+of continuous differentiated functions with fixed bounds.
 $$J(x(\cdot)) = \int_{\alpha}^{\beta} I(t, x(t),\dot{x}(t))dt \to 
 \min_{x(\cdot):x(\alpha)=a, x(\beta)=b}$$
 
@@ -47,15 +47,15 @@ constant.
 
 Then let approximate integral from Variation Problem by the Trapezoidal Formula
 $$J(x(\cdot)) \approx \sum_{i=0}^{N-1}I(t_i, x_i, \dot{x}(t_i)) \Delta t$$
-And derivative $\dot{x}(t_i)$ can be also approximated with finite difference:
+And derivative $\dot{x}(t_i)$ can be also approximated with a finite difference:
 $\dot{x}(t_i) \approx \frac{(x_{i+1} - x_i)}{\Delta t}$.
 And so let 
 $$J(x(\cdot)) \approx J_N(x_1, \cdots, x_{N-1}) = 
 \sum_{i=0}^{N-1}I(t_i, x_i, \frac{(x_{i+1} - x_i)}{\Delta t}) \Delta t \to
 \min_{x_1, \cdots, x_{N-1}}$$
-Optimization problem in the infinite dimensions derived to optimization problem
-in finite dimensions.
-Also can be solved regularized problem:
+The optimization problem at infinite dimensions led to an optimization problem
+at finite dimensions.
+Also can be solved the regularized problem:
 $$J_N^\lambda (x_1, \cdots, x_{N-1}) = J_N(x_1, \cdots, x_{N-1}) + 
 \lambda \sum_{i=0}^{N-1}(\frac{x_{i+1}-x_i}{\Delta t})^2 \Delta t$$
 Where $\lambda \ge 0$ is regularization parameter.
@@ -79,10 +79,10 @@ Where $\lambda \ge 0$ is regularization parameter.
 
 ## Provided Solution
 
-To solve problem, it was written simple code using R language, that appears 
-[there on GitHub](https://github.com/dPaliura/Control_theory_labs/blob/main/lab3/model.R).
+To solve problem, I wrote simple code using R language, that appears 
+[thereon GitHub](https://github.com/dPaliura/Control_theory_labs/blob/main/lab3/model.R).
 
-Solution provided with function
+Solution provided with the function
 ```
 # Solves variation problem where
 # I = function(t, x, dx) - underintegral function:
@@ -98,12 +98,12 @@ Solution provided with function
 var.prb(I, t0, t1, x0, x1, N=50, lambda = NULL, ... , method = 'BFGS')
 ```
 This function returns S3 class named ```VariationProblemSolution``` and so
-a generic methods developed for plotting and printing result.
+generic methods developed for plotting and printing result.
 
-So I chose ```N=50``` and set as default value into developed function.
-As method I chose the BFGS and set ```method='BFGS'``` as default. But both 
-parameters can be changed. Method can be used according to available methods
-provided in ```optim``` function in R ```stats``` package.
+So I chose ```N=50``` and set it as the default value into the developed
+function. As the method, I chose the BFGS and set ```method='BFGS'``` as the
+default. But both arguments can be changed. The method can be used according to
+available methods provided by ```optim``` function from R ```stats``` package.
 
 Function $J_N(x_1, \cdots ,x_{N-1}$ defined next way (inner code fragment):\
 ```
@@ -122,7 +122,7 @@ J <- if(is.null(lambda)) function(X){
 
 ## Result
 
-Let's get solution for chosen variant via written code.
+Let's get a solution for chosen variant via written code.
 
 ```{r find solution, echo=TRUE}
 I <- function(t, x, dx) dx^2 + x^2
@@ -136,7 +136,7 @@ plot(sol, main='Solution graphical representation')
 ```
 
 It works easy and fine.\
-Plot for iterations and function $J_N$
+The plot for iterations and function $J_N$ is below
 
 ```{r plot iters-value}
 iters <- 0:6 *10
@@ -147,9 +147,10 @@ plot(iters, value,
      main = 'J value dependence on iteration number')
 ```
 
-Change of $J$ function value is decreasing on increase of iterations number. It
-seems that after 30-th iteration we could stop having pretty accurate solution.
-Also, I noticed, that whole change of $J$ is about 0.02 - it's little.  
+Change of $J$ function value is decreasing while increasing of iterations
+number. It seems that after the 30th iteration we could stop having a pretty
+accurate solution. Also, I noticed, that the whole change of $J$ is about 
+0.02 - it's little.  
 
 ## Analytical Solution
 
@@ -190,7 +191,7 @@ legend('topleft', legend=c('Numeric', 'Analytic'),
        lwd = c(2, 1), col = c('black', 'red'))
 ```
 
-Lines are the same. So $N=50$ is very enough to have correct solution.
+The lines are the same. So $N=50$ is very enough to have the correct solution.
 
 Try different $N$ values - $N \in \{2, 5, 10, 30, 100\}$
 
