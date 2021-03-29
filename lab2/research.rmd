@@ -32,12 +32,13 @@ source('output.R')
 ## Introduction
 
 This document was created in addition to 'Control Theory' subject second
-laboratory work 'Mathematical Modeling of Epidemics'. This document contains
-research for a dependence of input parameters on the problem solution. One of 
-the well-known models for modeling epidemics is SIRD (Susceptible, Infected,
-Recovered, Dead). All parameters will be set randomly in recommended intervals
-that are respective to the COVID-19 pandemic. Also, the SIRD model can be
-complicated with some special values.\
+laboratory work 'Mathematical Modeling of Epidemics'. This document on GitHub
+is [here](https://github.com/dPaliura/Control_theory_labs/blob/main/lab2/research.pdf)
+It contains the research for a dependence of input parameters on the problem
+solution. One of the well-known models for modeling epidemics is SIRD
+(Susceptible, Infected, Recovered, Dead). All parameters will be set randomly in
+recommended intervals that are respective to the COVID-19 pandemic. Also, the
+SIRD model can be complicated with some special values.\
 
 I chose the model with testing, so the system is described with additional value
 J - Justified (I guess, it could mean something other). Justified - people who
