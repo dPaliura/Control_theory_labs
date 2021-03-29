@@ -1,0 +1,39 @@
+---
+title: "Numerical Solution of a Variation Problem"
+author: "Daniel Paliura"
+date: "3/29/2021"
+output: pdf_document
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+source('model.R', echo = FALSE)
+```
+
+## Introduction
+
+This document was created in addition to 'Control Theory' subject third
+laboratory work 'Numerical Solution of a Variation Problem'. This document on
+GitHub is [here](https://github.com/dPaliura/Control_theory_labs/blob/main/lab3/report.pdf).
+It contains performance of the task according to variant.
+
+## The Task
+
+1) Chosen example (variant 1 as 15-2*7) of variation problem to solve: 
+    $\int_{0}^{1}((x')^2 + x^2)dt \to \min, x_0=x(0)=0, x_N=x(1)=1$.
+2) To choose number of approximation points $N$.
+3) To code function $J_N(x_1, \cdots ,x_{N-1}$.
+4) To choose optimization method (non-gradient or gradient) for minimization
+    $J_N(x_1, \cdots ,x_{N-1}$.
+5) To apply chosen method to minimize $J_N(x_1, \cdots ,x_{N-1}$ and build
+    plot of function value dependence on iteration number.
+6) To visualize got solution as part-line plot by points
+    $(t_i, x_i), i=0 \cdots N$.
+7) To compare visually (by plots) got numeric solution and analytic one.
+8) To research approximation accuracy dependently on number of approximation
+    points $N$.
+9) To prepare the report.
