@@ -21,7 +21,8 @@ source('model.R', echo = FALSE)
 * [The Task](#the-task)
 * [Provided Solution](#provided-solution)
 * [Result](#result)
-* [Comparions](#comparions)
+* [Analytical Solution](#analytical-solution)
+* [Comparisons](#comparisons)
 
 ## Introduction
 
@@ -146,8 +147,75 @@ plot(iters, value,
      main = 'J value dependence on iteration number')
 ```
 
+Change of $J$ function value is decreasing on increase of iterations number. It
+seems that after 30-th iteration we could stop having pretty accurate solution.
+Also, I noticed, that whole change of $J$ is about 0.02 - it's little.  
 
+## Analytical Solution
 
+$$\frac{\partial I}{\partial x} = 2x$$
+$$\frac{\partial I}{\partial \dot{x}} = 2\dot{x}$$
+$$\frac{\partial^2 I}{\partial \dot{x} \partial t} = 2\ddot{x}$$
+$$(\frac{\partial I}{\partial x}=\frac{\partial^2 I}{\partial\dot{x}\partial t})
+\Rightarrow (2x = 2 \ddot{x}) \Rightarrow (\ddot{x}-x = 0)$$
+$$\lambda^2 - 1 = 0$$
+$$\lambda = \pm 1$$
+$$x(t) = C_1 e^t + C_2 e^{-t}, x(0)=0, x(1)=1$$
+$${C_1+C_2 = 0 \Rightarrow C_1=-C_2 \;\;\;\; and \;\;\;\; C_1e + \frac{C_2}{e}=1}$$
+$$-C_2e + \frac{C_2}{e}=1 \Rightarrow C_2 = \frac{1}{e^{-1}-e}$$
+$$C_1 = -C_2 = \frac{1}{e-e^{-1}}$$
+$$C_1 = \frac{1}{e-e^{-1}}, \;\;\;\; C_2 = \frac{1}{e^{-1}-e}$$
+Finally
+$$x(t) = \frac{e^t}{e-e^{-1}} + \frac{e^{-t}}{e^{-1}-e} =
+\frac{e^t - e^{-t}}{e-e^{-1}} = \frac{\sinh(t)}{\sinh(1)}$$
 
+## Comparisons
 
-## Comparions
+Set found $x(t)$ next way:
+
+```{r set x of t, echo=TRUE}
+x <- function(t) sinh(t)/sinh(1)
+time <- 0:100/100
+x <- x(time)
+```
+
+Let's compare:
+
+```{r plot solutions}
+plot(sol,
+     lwd =2,
+     main = 'Solutions comparison')
+lines(time, x, col='red')
+legend('topleft', legend=c('Numeric', 'Analytic'),
+       lwd = c(2, 1), col = c('black', 'red'))
+```
+
+Lines are the same. So $N=50$ is very enough to have correct solution.
+
+Try different $N$ values - $N \in \{2, 5, 10, 30, 100\}$
+
+```{r plot different N}
+N <- c(2, 5, 10, 30, 100)
+plot(time, x, 
+     type = 'l', lwd = 2,
+     xlab = 'time', ylab = 'x',
+     main = 'Solutions with various N')
+
+leg <- 'Analytic'
+leg.col <- 1
+leg.lwd <- c(2, rep(1, length(N)))
+
+for (i in 1:length(N)){
+    sol <- var.prb(I, t0, t1, x0, x1, N[i])
+    lines(sol$times, c(sol$x0, sol$opt$par, sol$x1),
+          col = i+1)
+    leg <- c(leg, paste0('N=',N[i],', called J - ', sol$opt$counts[1],
+                         ', grad - ', sol$opt$counts[2]))
+    leg.col <- c(leg.col, i+1)
+}
+
+legend('topleft', legend = leg, col=leg.col, lwd = leg.lwd)
+```
+
+Just a mess. Probably this example is very simple to detect which N is nicer to
+use. I saw no valuable difference for all $N>2$.
