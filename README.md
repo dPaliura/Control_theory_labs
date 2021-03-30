@@ -12,9 +12,11 @@ Contents:
 * [Laboratory work 1](#laboratory-work-1)
   'Navigation Problem of Speed' - folder
   [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
-* Laboratory work 2 'Mathematical Modeling of Epidemics' - folder
+* [Laboratory work 2](#laboratory-work-2)
+  'Mathematical Modeling of Epidemics' - folder
   [lab2](https://github.com/dPaliura/Control_theory_labs/tree/main/lab2)
-* Laboratory work 3 'Numerical Solution of a Variation Problem' - folder
+* [Laboratory work 3](#laboratory-work-3)
+  'Numerical Solution of a Variation Problem' - folder
   [lab3](https://github.com/dPaliura/Control_theory_labs/tree/main/lab3)
 
 ### Laboratory work 1
@@ -146,9 +148,11 @@ solution.
 * [Лабораторна робота 1](#лабораторна-робота-1)
   'Навігаційна задача швидкодії' - папка 
   [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
-* Лабораторна робота 2 'Математичне моделювання епідемій' - папка
+* [Лабораторна робота 2](#лабораторна-робота-2)
+  'Математичне моделювання епідемій' - папка
   [lab2](https://github.com/dPaliura/Control_theory_labs/tree/main/lab2)
-* Лабораторна робота 3 'Чисельне розв'язання Варіаційної задачі' - папка
+* [Лабораторна робота 3](#лабораторна-робота-3)
+  'Чисельне розв'язання Варіаційної задачі' - папка
   [lab3](https://github.com/dPaliura/Control_theory_labs/tree/main/lab3)
 
 ### Лабораторна робота 1
