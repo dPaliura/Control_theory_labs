@@ -9,7 +9,12 @@ which were accomplished by **Daniel Paliura** - student of KM-73 group
 (2017-2021 study years) of NTUU "Igor Sikorsky KPI".
 
 Contents:  
-Laboratory work 1 'Navigation Problem of Speed' - folder [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
+* Laboratory work 1 'Navigation Problem of Speed' - folder
+  [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
+* Laboratory work 2 'Mathematical Modeling of Epidemics' - folder
+  [lab2](https://github.com/dPaliura/Control_theory_labs/tree/main/lab2)
+* Laboratory work 3 'Numerical Solution of a Variation Problem' - folder
+  [lab3](https://github.com/dPaliura/Control_theory_labs/tree/main/lab3)
 
 ### Laboratory work 1
 
@@ -32,7 +37,7 @@ Laboratory work task includes research of problem parameters influence. The
 research was made and it was proposed an alternative algorithm of the problem
 solution. The proposed algorithm was compared to the aiming method.
 File in directory lab1
-[report.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab1/research.pdf)
+[research.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab1/research.pdf)
 contains full research of parameters, target reach conditions formulation and
 proof, proposed algorithm formulation and implementation with R language.
 
@@ -64,6 +69,46 @@ The developed program foresees two ways of data input:
 Also, the program is restartable. After model compilation and interpretation,
 the user is asked to restart the program.
 
+### Laboratory work 2
+
+This work is dedicated for modeling of epidemics evolution. This work has no
+interactive program part for difference to first one, and developed software
+tools are for building and computing the model and also for displaying it
+(descriptive text and plotting), those tools are divided into two modules.
+Chosen model has name SIRD and it based on differential equations system with
+variables describing volumes of different groups of people:
+
+* S - Susceptible,
+* I - Infected,
+* R - Recovered,
+* D - Dead.
+
+This model has many different complications. Such one I used in this work. Built
+model includes testing for infection, so it has additional group J - tested
+infected. People in this group are isolated from contacts with Susceptible and
+have chances to recover not less than Infected (latent) and death probability
+not greater than Infected.
+
+Model parameters are:
+
+* N - whole number of people
+* I0 - initial number of infected (I0 > 0 with t=0)
+* r - mean contacts intensity for single individual while day
+* c - mean probability to infect after one contact with one infected
+* alpha - mean probability to recover while a day for latent infected I
+* beta - mean probability to die while a day for latent infected I
+* a - mean probability to recover while a day for tested infected J (a >= alpha)
+* b - mean probability to die while a day for tested infected J (b <= beta)
+
+Also model has control variables - tested part for each day and analogue for
+vaccinated part. Vaccinated people becomes Recovered at once.
+
+In this work it was made a research for model the flow dependence on model
+parameters. Control affect was considered too.
+File
+[research.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab2/research.pdf)
+contains full model description and mentioned research.
+
 
 ## UA
 
@@ -72,7 +117,12 @@ the user is asked to restart the program.
 КМ-73 (2017-2021 навчальні роки) НТУУ "КПІ ім. Ігоря Сікорського". 
 
 Зміст:  
-Лабораторна робота 1 'Навігаційна задача швидкодії' - папка [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
+* Лабораторна робота 1 'Навігаційна задача швидкодії' - папка 
+  [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
+* Лабораторна робота 2 'Математичне моделювання епідемій' - папка
+  [lab2](https://github.com/dPaliura/Control_theory_labs/tree/main/lab2)
+* Лабораторна робота 3 'Чисельне розв'язання Варіаційної задачі' - папка
+  [lab3](https://github.com/dPaliura/Control_theory_labs/tree/main/lab3)
 
 ### Лабораторна робота 1
 
@@ -93,7 +143,7 @@ v, s0, l, phi, f(y) - параметри задачі. Задачу постав
 було проведено і також було запропоновано альтернативний алгоритм.
 Запропонований алгоритм було порівняно із методом прицілювання.
 Файл
-[report.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab1/research.pdf)
+[research.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab1/research.pdf)
 в директорії lab1 містить повне дослідження, формулювання та
 доведення умов досяжності цільової точки, запропонований алгоритм та його
 реалізацію на мові R.
@@ -127,6 +177,50 @@ n > 2, оскільки має місце знос корабля при наб�
   числові значення.
 Також програма передбачає повторне виконання. Після побудови та інтерпретації
 моделі користувачу пропонується виконати програму ще раз.
+
+### Лабораторна робота 2
+
+Ця робота присвячена моделюванню розвитку епідемій. На відміну від першої 
+роботи, в цій роботі відсутня інтерактивна частина програми, а розроблені 
+програмні засоби для створення і прорахунку моделі, а також для відображення
+(текстового опису та побудови графіків); ці засоби розділені на 2 модулі.
+Застосована модель називається SIRD та базується на системі диференціальних
+рівнянь із змінними, що відображають кількість людей в різних групах:
+
+* S - Susceptible, кількість здорових людей,
+* I - Infected, кількість інфікованих людей,
+* R - Recovered, кількість людей з імунітетом,
+* D - Dead, кількість людей, що померли.
+
+Ця модель має багато різноманітних ускладнень. В даній роботі було реалізовано
+саме одне з таких ускладнень. Побудована модель враховує тестування населення,
+тобто додається ще одна група людей - J, для якої вважається, що люди з цієї
+групи ізольовані від контактів з іншими людьми та мають шанси виздоровлення не
+менші, ніж у латентно хворих (група I) та не більшу ймовірність смерті, ніж у
+латентно хворих.
+
+Параметрами моделі є:
+
+* N - загальна кількість людей
+* I0 - початкова кількість хворих (I0 > 0 при t=0)
+* r - середня інтенсивність контактів одного індивіда за день
+* c - середня ймовірність заразитись при конткті із хворим
+* alpha - середня ймовірність виздоровити за один день для латентного хворого
+* beta - середня ймовірність померти за один день для латентного хворого
+* a - середня ймовірність виздоровити за один день для тестованого хворого
+  (a >= alpha)
+* b - середня ймовірність померти за один день для тестованого хворого
+  (b <= beta)
+
+Також модель передбачає змінні контролю - частку людей, що тестуються щодня та
+аналогічне значення для частки вакцинованих людей. При цьому вважається, що
+вакциновані люди вже не хворіють, тобто відразу потравляють до групи R.
+
+В даній роботі було проведено дослідження впливу параметрів моделі на розвинення
+моделі, а також розглянуто як контроль впливає на граничні значення моделі.
+Файл 
+[research.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab2/research.pdf)
+містить повний опис моделі та текст зазначеного дослідження.
 
 
 ## RU
