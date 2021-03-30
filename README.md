@@ -109,6 +109,31 @@ File
 [research.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab2/research.pdf)
 contains full model description and mentioned research.
 
+### Laboratory work 3
+
+The last laboratory work studies the numerical solution of a variation problem.
+This problem consists in approximation of a smooth function by N+1 points. This
+smooth function optimizes goal function integral on time interval with fixed
+bounds and fixed bound coordinates.
+File
+[report.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab3/report.pdf)
+contains more complete and correct formulation for the Variation Problem, also,
+the task for laboratory work and its performance.
+
+Solution for such a problem could be used in first and second works to find
+optimal controls.
+
+For task performance, a module was developed which contains function that solves
+a variation problem and returns solution as special class object, and so pair of
+generic functions was written for this class:
+
+* summary - for the text interpretation of solution,
+* plot - for plotting solution.
+
+The developed program isn't interactive, but is pretty comfortable and clear for
+use, also lets customize parameters of problem and optimization method used in
+solution.
+
 
 ## UA
 
@@ -221,6 +246,32 @@ n > 2, оскільки має місце знос корабля при наб�
 Файл 
 [research.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab2/research.pdf)
 містить повний опис моделі та текст зазначеного дослідження.
+
+### Лабораторна робота 3
+
+Остання лабораторна робота розглядає чисельне рішення варіаційнох задачі. Ця
+задача полягає у знаходженні наближення деякої гладкої функції набором із N+1
+точки, яка оптимізує інтеграл цільової функію на часовому інтервалі із
+фіксованими кінцями та фіксованими початковою та кінцевою координатами.
+Файл
+[report.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab3/report.pdf)
+містить більш повне та коректне формулювання варіаційної задачі, а також
+постановку задачі лабораторної роботи та виконання поставленої задачі.
+
+Рішення саме такої задачі могло бути застосованим у першій та другій роботах
+для знаходження оптимальних значень змінних контролю.
+
+Для виконання поставленого завдання даної роботи було написано один модуль, який
+містить функцію, що повертає рішення задачі варіаційного числення у вигляді
+об'єкту спеціального класу, а тому було написано дві загальні (generic) функції
+для цього класу:
+
+* summary - для текстової інтерпретації даного об'єкту,
+* plot - для побудови графіку отриманого розв'язку.
+
+Розроблений програмний застосунок не є інтерактивним, хоча є досить зручним і
+зрозумілим у використанні, а також дозволяє налаштовувати параметри самої задачі
+та оптимізаційного методу, що використовується для її вирішення.
 
 
 ## RU
