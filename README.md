@@ -21,7 +21,7 @@ Contents:
 
 ### Laboratory work 1
 
-The task of this work is to find control of boat which moves on a plane from
+The task of this work is to find control of a boat that moves on a plane from
 point
 (0, 0) to some stable target with speed v. There is a vector field of the stream
 on a plane. The vector of the stream is parallel to abscissa and perpendicular
@@ -50,8 +50,8 @@ environment under Ubuntu 20.4.
 To run the program you need to run script main.R inside the lab1 folder.
 Other scripts must be in the same folder as main.R script.
 
-The result of program run contains a description of input data, description of
-key model variables, and plot with boat movement to the target.
+The result of the program run contains a description of input data, description
+of key model variables, and plot with boat movement to the target.
 
 One great issue of this problem solution is the used method. It is not always 
 achievable target will be reached with the used method. For example, in my
@@ -74,12 +74,12 @@ the user is asked to restart the program.
 
 ### Laboratory work 2
 
-This work is dedicated for modeling of epidemics evolution. This work has no
-interactive program part for difference to first one, and developed software
+This work is dedicated to the modeling of epidemics evolution. This work has no
+interactive program part for the difference to first one, and developed software
 tools are for building and computing the model and also for displaying it
 (descriptive text and plotting), those tools are divided into two modules.
-Chosen model has name SIRD and it based on differential equations system with
-variables describing volumes of different groups of people:
+Chosen model has the name SIRD and is based on a differential equations system
+with variables describing volumes of different groups of people:
 
 * S - Susceptible,
 * I - Infected,
@@ -103,39 +103,39 @@ Model parameters are:
 * a - mean probability to recover while a day for tested infected J (a >= alpha)
 * b - mean probability to die while a day for tested infected J (b <= beta)
 
-Also model has control variables - tested part for each day and analogue for
-vaccinated part. Vaccinated people becomes Recovered at once.
+Also model has control variables - tested part for each day and analog for the
+vaccinated part. Vaccinated people become Recovered at once.
 
-In this work it was made a research for model the flow dependence on model
-parameters. Control affect was considered too.
+In this work, it was made a research for model flow dependence on model
+parameters. The control effect was considered too.
 File
 [research.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab2/research.pdf)
-contains full model description and mentioned research.
+contains the full model description and mentioned research.
 
 ### Laboratory work 3
 
 The last laboratory work studies the numerical solution of a variation problem.
-This problem consists in approximation of a smooth function by N+1 points. This
-smooth function optimizes goal function integral on time interval with fixed
-bounds and fixed bound coordinates.
+This solution consists of an approximation of a smooth function by N+1 points.
+This smooth function optimizes goal function integral on time interval with
+fixed bounds and fixed bound coordinates.
 File
 [report.pdf](https://github.com/dPaliura/Control_theory_labs/blob/main/lab3/report.pdf)
-contains more complete and correct formulation for the Variation Problem, also,
-the task for laboratory work and its performance.
+contains a more complete and correct formulation for the Variation Problem,
+also, the task for laboratory work and its performance.
 
-Solution for such a problem could be used in first and second works to find
+Solution for such a problem could be used in the first and second works to find
 optimal controls.
 
-For task performance, a module was developed which contains function that solves
-a variation problem and returns solution as special class object, and so pair of
-generic functions was written for this class:
+For task performance, a module was developed which contains the function that
+solves a variation problem and returns solution as a special class object, and
+so pair of generic functions were written for this class:
 
 * summary - for the text interpretation of solution,
 * plot - for plotting solution.
 
-The developed program isn't interactive, but is pretty comfortable and clear for
-use, also lets customize parameters of problem and optimization method used in
-solution.
+The developed program isn't interactive but is pretty comfortable and clear for
+use, also lets customize the parameters of the problem and optimization method
+used in solution.
 
 
 ## UA
