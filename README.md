@@ -9,7 +9,8 @@ which were accomplished by **Daniel Paliura** - student of KM-73 group
 (2017-2021 study years) of NTUU "Igor Sikorsky KPI".
 
 Contents:  
-* Laboratory work 1 'Navigation Problem of Speed' - folder
+* [Laboratory work 1](#laboratory-work-1)
+  'Navigation Problem of Speed' - folder
   [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
 * Laboratory work 2 'Mathematical Modeling of Epidemics' - folder
   [lab2](https://github.com/dPaliura/Control_theory_labs/tree/main/lab2)
@@ -142,7 +143,8 @@ solution.
 КМ-73 (2017-2021 навчальні роки) НТУУ "КПІ ім. Ігоря Сікорського". 
 
 Зміст:  
-* Лабораторна робота 1 'Навігаційна задача швидкодії' - папка 
+* [Лабораторна робота 1](#лабораторна-робота-1)
+  'Навігаційна задача швидкодії' - папка 
   [lab1](https://github.com/dPaliura/Control_theory_labs/tree/main/lab1)
 * Лабораторна робота 2 'Математичне моделювання епідемій' - папка
   [lab2](https://github.com/dPaliura/Control_theory_labs/tree/main/lab2)
